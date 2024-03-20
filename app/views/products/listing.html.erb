@@ -1,0 +1,13 @@
+<h1>Product Listing</h1>
+
+<div id="products">
+  <% @products.each do |product| %>
+    <div>
+        <h3>Produto</h3>
+        <%= product.title %>
+        <h3>Loja</h3>
+        <%= product.store.name %> 
+        <hr>        
+    </div>
+  <% end %>
+</div>
