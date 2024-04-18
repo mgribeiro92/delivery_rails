@@ -1,35 +1,31 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
-
-user = User.find_by(
-  email: "store@example.com"
+admin = User.find_by(
+  email: "admin@example.com"
 )
-if !user
-  user = User.new(
-    email: "store@example.com",
+if !admin
+  admin = User.new(
+    email: "admin@example.com",
     password: "123456",
-    password_confirmation: "123456"
+    password_confirmation: "123456",
+    role: :admin
   )
+  admin.save!
 end
 
-[
-  "Orange Curry",
-  "Belly King"
-].each do |store|
+["Orange Curry", "Belly King"].each do |store|
+  user = User.new(
+    email: "#{store.split.map { |s| s.downcase}.join(".")}@example.com",
+    password: "123456",
+    password_confirmation: "123456",
+    role: :seller
+  )
+  user.save!
+
   Store.find_or_create_by!(
     name: store, user: user
   )
 end
 
-[
-  "Massaman Curry",
+[ "Massaman Curry",
   "Risotto with Seafood",
   "Tuna Sashimi",
   "Fish and Chips",
@@ -41,8 +37,7 @@ end
   )
 end
 
-[
-  "Massaman Risotto",
+[ "Massaman Risotto",
   "Caesar Salad",
   "Tuna Sashimi",
   "Chicken Milanese",
@@ -52,4 +47,18 @@ end
   Product.find_or_create_by!(
     title: dish, store: store
   )
+end
+
+["Aracelis Weissnat", "Pasquale Wisozk"].each do |buyer|
+  email = buyer.split.map { |s| s.downcase }.join(".")
+  user = User.find_by(email: email)
+  if !user
+    user = User.new(
+      email: "#{email}@example.com",
+      password: "123456",
+      password_confirmation: "123456",
+      role: :buyer
+    )
+    user.save!
+  end
 end
