@@ -3,10 +3,10 @@ class User < ApplicationRecord
 
   enum :role, [:admin, :seller, :buyer]
   has_many :stores
+  has_many :refresh_token
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  #jwt_key = Rails.application.credentials.jwt_key
 
   def self.token_for(user)
     jwt_key = Rails.application.credentials.jwt_key
@@ -22,6 +22,19 @@ class User < ApplicationRecord
     User.find(user_data[:id])
   rescue JWT::ExpiredSignature
     raise InvalidToken.new
+  end
+
+  def self.refresh_token_for(user)
+    jwt_key = Rails.application.credentials.jwt_key
+    payload = {id: user.id}
+    token = JWT.encode payload, jwt_key, "HS256"
+    refresh_token = RefreshToken.new(
+      token: token,
+      user: user,
+      expires_at: 1.day.from_now.to_i
+    )
+    refresh_token.save
+    refresh_token
   end
 
 end

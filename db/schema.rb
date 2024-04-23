@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_19_215845) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_23_181321) do
   create_table "products", force: :cascade do |t|
     t.integer "store_id", null: false
     t.string "title"
@@ -18,6 +18,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_215845) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_products_on_store_id"
+  end
+
+  create_table "refresh_tokens", force: :cascade do |t|
+    t.string "token"
+    t.integer "user_id", null: false
+    t.integer "expires_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_refresh_tokens_on_user_id"
   end
 
   create_table "stores", force: :cascade do |t|
@@ -42,5 +51,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_19_215845) do
   end
 
   add_foreign_key "products", "stores"
+  add_foreign_key "refresh_tokens", "users"
   add_foreign_key "stores", "users"
 end

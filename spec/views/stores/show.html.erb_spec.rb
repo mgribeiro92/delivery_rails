@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe "stores/show", type: :view do
   let(:user) {
     user = User.new(
-      email: "user@example.com.br", password: "123456", password_confirmation: "123456"
+      email: "user@example.com.br",
+      password: "123456",
+      password_confirmation: "123456"
     )
     user.save!
     user

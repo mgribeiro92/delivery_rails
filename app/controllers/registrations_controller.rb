@@ -16,7 +16,8 @@ class RegistrationsController < ApplicationController
       render json: {message: "User not authorized, application for sellers only!"}, status: 401
     else
       token = User.token_for(user)
-      render json: {email: user.email, token: token}
+      refresh_token = User.refresh_token_for(user)
+      render json: {email: user.email, token: token, refresh_token: refresh_token.token}
     end
   end
 
