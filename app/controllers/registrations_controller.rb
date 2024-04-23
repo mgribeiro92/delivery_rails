@@ -11,9 +11,9 @@ class RegistrationsController < ApplicationController
     user = User.find_by(email: sign_in_params[:email])
 
     if !user || !user.valid_password?(sign_in_params[:password])
-      render json: {message: "Nope!"}, status: 401
-    elsif user.role != sign_in_params[:app_vue]
-      render json: {message: "User not authorized"}, status: 401
+      render json: {message: "Email or password incorrect!"}, status: 401
+    elsif sign_in_params[:app_vue] == 'seller' and user.role != 'seller'
+      render json: {message: "User not authorized, application for sellers only!"}, status: 401
     else
       token = User.token_for(user)
       render json: {email: user.email, token: token}

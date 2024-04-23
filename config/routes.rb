@@ -15,5 +15,8 @@ end
 Rails.application.routes.draw do
   namespace :api do
     resources :stores
+    get "user_store" => "stores#user_store"
   end
+
+
 end
