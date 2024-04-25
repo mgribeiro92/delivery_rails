@@ -6,11 +6,12 @@ class User < ApplicationRecord
   has_many :refresh_token
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+  validates :role, presence: true
 
 
   def self.token_for(user)
     jwt_key = Rails.application.credentials.jwt_key
-    jwt_headers = {exp: 1.hour.from_now.to_i }
+    jwt_headers = {exp: 1.second.from_now.to_i }
     payload = {id: user.id, email: user.email, role: user.role}
     JWT.encode payload.merge(jwt_headers), jwt_key, "HS256"
   end
@@ -25,16 +26,14 @@ class User < ApplicationRecord
   end
 
   def self.refresh_token_for(user)
-    jwt_key = Rails.application.credentials.jwt_key
-    payload = {id: user.id}
-    token = JWT.encode payload, jwt_key, "HS256"
+    token = SecureRandom.uuid
     refresh_token = RefreshToken.new(
       token: token,
       user: user,
       expires_at: 1.day.from_now.to_i
     )
     refresh_token.save
-    refresh_token
+    refresh_token.token
   end
 
 end

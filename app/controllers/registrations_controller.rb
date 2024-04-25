@@ -1,5 +1,5 @@
 class RegistrationsController < ApplicationController
-  skip_forgery_protection only: [ :create, :me, :sign_in]
+  skip_forgery_protection only: [ :create, :me, :sign_in, :new_token]
   before_action :authenticate!, only: [ :me ]
   rescue_from User::InvalidToken, with: :not_authorized
 
@@ -12,13 +12,37 @@ class RegistrationsController < ApplicationController
 
     if !user || !user.valid_password?(sign_in_params[:password])
       render json: {message: "Email or password incorrect!"}, status: 401
-    elsif sign_in_params[:app_vue] == 'seller' and user.role != 'seller'
-      render json: {message: "User not authorized, application for sellers only!"}, status: 401
     else
       token = User.token_for(user)
-      refresh_token = User.refresh_token_for(user)
-      render json: {email: user.email, token: token, refresh_token: refresh_token.token}
+      if user.refresh_token.present?
+        refresh_token = user.refresh_token.first
+        if valid_refresh_token!(refresh_token)
+          refresh_token = refresh_token.token
+          puts 'token valido'
+        else
+          refresh_token = User.refresh_token_for(user)
+          puts 'token invalido, foi criado outro'
+        end
+      else
+        refresh_token = User.refresh_token_for(user)
+        puts 'usuario ainda nao tem token'
+      end
+      render json: {email: user.email, token: token, refresh_token: refresh_token}
     end
+  end
+
+  def new_token
+    refresh_token = RefreshToken.find_by(token: params[:refresh_token])
+    if !refresh_token
+      render json: { message: "Refresh_token invalid"}, status: 401
+    elsif valid_refresh_token!(refresh_token)
+      user = User.find_by(refresh_token: refresh_token)
+      token = User.token_for(user)
+      render json: {token: token}
+    else
+      render json: {message: "Refresh_token invalid"}, status: 401
+    end
+
   end
 
   def create
@@ -40,6 +64,6 @@ class RegistrationsController < ApplicationController
   end
 
   def sign_in_params
-    params.required(:login).permit(:email, :password, :app_vue)
+    params.required(:login).permit(:email, :password)
   end
 end

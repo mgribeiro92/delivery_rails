@@ -15,6 +15,17 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def valid_refresh_token!(refresh_token)
+    expiration_refresh_token = refresh_token.expires_at
+    timestamp = Time.now.to_i
+    if timestamp > expiration_refresh_token
+      refresh_token.delete
+      false
+    else
+      true
+    end
+  end
+
   private
 
   def check_token!
