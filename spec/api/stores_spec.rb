@@ -3,7 +3,10 @@ require "rails_helper"
 RSpec.describe "/stores", type: :request do
   let(:user) {
     user = User.new(
-      email: "user@example.com.br", password: "123456", password_confirmation: "123456"
+      email: "user@example.com.br",
+      password: "123456",
+      password_confirmation: "123456",
+      role: "seller"
     )
     user.save!
     user
@@ -17,14 +20,19 @@ RSpec.describe "/stores", type: :request do
     {name: nil}
   }
 
-  before {
-    sign_in(user)
+  let(:signed_in) {
+    api_sign_in(user )
   }
 
   describe "GET /show" do
     it "render a successful response with stores data" do
       store = Store.create! valid_attributes
-      get "/stores/#{store.id}", headers: {"Accept" => "application/json"}
+      get (
+        "/stores/#{store.id}",
+        headers: {
+          "Accept" => "application/json"
+        }
+      )
       json = JSON.parse(response.body)
       expect(json["name"]).to eq "New Store"
     end
