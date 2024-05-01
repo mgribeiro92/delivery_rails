@@ -1,10 +1,16 @@
 class StoresController < ApplicationController
+  skip_forgery_protection only: [ :create ]
   before_action :authenticate!
   before_action :set_store, only: %i[ show edit update destroy ]
+  rescue_from User::InvalidToken, with: :not_authorized
 
   # GET /stores or /stores.json
   def index
-    @stores = Store.where(user: current_user)
+    if current_user.admin?
+      @stores = Store.all
+    else
+      @stores = Store.where(user: current_user)
+    end
   end
 
   # GET /stores/1 or /stores/1.json
@@ -23,7 +29,9 @@ class StoresController < ApplicationController
   # POST /stores or /stores.json
   def create
     @store = Store.new(store_params)
-    @store.user = current_user
+    if !current_user.admin?
+      @store.user = current_user
+    end
 
     respond_to do |format|
       if @store.save
@@ -60,13 +68,22 @@ class StoresController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
+    def not_authorized(e)
+      render json: {message: "Invalid token!"}, status: 401
+    end
+
     def set_store
       @store = Store.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def store_params
-      params.require(:store).permit(:name)
+      required = params.require(:store)
+
+      if current_user.admin?
+        required.permit(:name, :user_id)
+      else
+        required.permit(:name)
+      end
     end
 end

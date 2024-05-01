@@ -58,15 +58,15 @@ class RegistrationsController < ApplicationController
   end
 
   private
-  def not_authorized(e)
-    render json: {message: "Nope!"}, status: 401
-  end
+    def not_authorized(e)
+      render json: {message: "Invalid token!"}, status: 401
+    end
 
-  def user_params
-    params.required(:user).permit(:email, :password, :password_confirmation)
-  end
+    def user_params
+      params.required(:user).permit(:email, :password, :password_confirmation)
+    end
 
-  def sign_in_params
-    params.required(:login).permit(:email, :password)
-  end
+    def sign_in_params
+      params.required(:login).permit(:email, :password)
+    end
 end
