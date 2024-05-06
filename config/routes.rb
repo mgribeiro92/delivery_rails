@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   devise_for :users
   resources :stores
+  resources :products
   get "listing" => "products#listing"
 
   post "new" => "registrations#create", as: :create_registration
@@ -10,14 +11,5 @@ Rails.application.routes.draw do
 
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check
-
-end
-
-Rails.application.routes.draw do
-  namespace :api do
-    resources :stores
-    get "user_store" => "stores#user_store"
-  end
-
 
 end

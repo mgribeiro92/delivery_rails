@@ -1,5 +1,5 @@
 class StoresController < ApplicationController
-  skip_forgery_protection only: [ :create ]
+  skip_forgery_protection only: [ :create, :update, :destroy ]
   before_action :authenticate!
   before_action :set_store, only: %i[ show edit update destroy ]
   rescue_from User::InvalidToken, with: :not_authorized
@@ -15,6 +15,12 @@ class StoresController < ApplicationController
 
   # GET /stores/1 or /stores/1.json
   def show
+    if current_user.stores.include?(@store)
+      @products = @store.products
+      render json: {store: @store, products: @products}
+    else
+      render json: {message: "Store not belongs to this user!"}
+    end
   end
 
   # GET /stores/new
@@ -63,7 +69,7 @@ class StoresController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to stores_url, notice: "Store was successfully destroyed." }
-      format.json { head :no_content }
+      format.json { render json: {message: "Store destroyed!"} }
     end
   end
 
