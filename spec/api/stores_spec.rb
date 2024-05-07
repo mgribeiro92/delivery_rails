@@ -38,3 +38,4 @@ RSpec.describe "/stores", type: :request do
     end
   end
 end
+
