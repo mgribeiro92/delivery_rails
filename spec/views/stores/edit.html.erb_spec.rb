@@ -23,6 +23,10 @@ RSpec.describe "stores/edit", type: :view do
     assign(:store, store)
   end
 
+  before do
+    sign_in user
+  end
+
   it "renders the edit store form" do
     render
 

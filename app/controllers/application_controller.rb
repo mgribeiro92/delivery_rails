@@ -35,8 +35,6 @@ class ApplicationController < ActionController::Base
   private
 
   def only_buyers!
-    puts('ta passando aqui')
-    puts(current_user)
     is_buyer = (current_user && current_user.buyer? ) && current_credential.buyer?
     puts(is_buyer)
     if !is_buyer

@@ -1,7 +1,7 @@
 class ProductsController < ApplicationController
   skip_forgery_protection
   before_action :authenticate!
-  before_action :set_product, only: %i[ show update ]
+  before_action :set_product, only: %i[ show update destroy ]
 
   def listing
     if !current_user.admin?
@@ -31,6 +31,11 @@ class ProductsController < ApplicationController
     else
       render json: @product.errors, status: :unprocessable_entity
     end
+  end
+
+  def destroy
+    @product.destroy!
+    render json: {message: "Store destroyed!"}
   end
 
   private

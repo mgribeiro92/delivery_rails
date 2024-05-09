@@ -15,11 +15,9 @@ class StoresController < ApplicationController
 
   # GET /stores/1 or /stores/1.json
   def show
-    if current_user.stores.include?(@store)
-      @products = @store.products
-      render json: {store: @store, products: @products}
-    else
-      render json: {message: "Store not belongs to this user!"}
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: {store: @store, products: @store.products} }
     end
   end
 
@@ -33,6 +31,9 @@ class StoresController < ApplicationController
 
   # GET /stores/1/edit
   def edit
+    if current_user.admin?
+      @sellers = User.where(role: :seller)
+    end
   end
 
   # POST /stores or /stores.json

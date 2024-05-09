@@ -16,17 +16,17 @@ class RegistrationsController < ApplicationController
     else
       token = User.token_for(user)
       if user.refresh_token.present?
-        refresh_token = user.refresh_token.first
+        refresh_token = user.refresh_token
         if valid_refresh_token!(refresh_token)
           refresh_token = refresh_token.token
-          puts 'token valido'
+          puts 'refresh_token valido'
         else
           refresh_token = User.refresh_token_for(user)
-          puts 'token invalido, foi criado outro'
+          puts 'refresh_token invalido, foi criado outro'
         end
       else
         refresh_token = User.refresh_token_for(user)
-        puts 'usuario ainda nao tem token'
+        puts 'usuario ainda nao tem refresh_token'
       end
       render json: {email: user.email, token: token, refresh_token: refresh_token}
     end
@@ -34,16 +34,13 @@ class RegistrationsController < ApplicationController
 
   def new_token
     refresh_token = RefreshToken.find_by(token: params[:refresh_token])
-    if !refresh_token
-      render json: { message: "Refresh_token invalid"}, status: 401
-    elsif valid_refresh_token!(refresh_token)
+    if refresh_token && valid_refresh_token!(refresh_token)
       user = User.find_by(refresh_token: refresh_token)
       token = User.token_for(user)
       render json: {token: token}
     else
       render json: {message: "Refresh_token invalid"}, status: 401
     end
-
   end
 
   def create

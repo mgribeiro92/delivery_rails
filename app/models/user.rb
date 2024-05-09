@@ -3,11 +3,10 @@ class User < ApplicationRecord
 
   enum :role, [:admin, :seller, :buyer]
   has_many :stores
-  has_many :refresh_token
+  has_one :refresh_token
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   validates :role, presence: true
-
 
   def self.token_for(user)
     jwt_key = Rails.application.credentials.jwt_key
