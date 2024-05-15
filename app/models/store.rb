@@ -3,6 +3,7 @@ class Store < ApplicationRecord
   before_validation :ensure_seller
   validates :name, presence: true, length: {minimum:3}
   has_many :products
+  has_one_attached :image
 
   private
 

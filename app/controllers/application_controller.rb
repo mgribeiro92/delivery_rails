@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
 
   def only_buyers!
     is_buyer = (current_user && current_user.buyer? ) && current_credential.buyer?
-    puts(is_buyer)
+
     if !is_buyer
       render json: { message: "Not authorized"}, status: 401
     end

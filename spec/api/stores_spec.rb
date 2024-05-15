@@ -34,7 +34,7 @@ RSpec.describe "/stores", type: :request do
         "Authorization" => "Bearer #{signed_in["token"]}"
       }
       json = JSON.parse(response.body)
-      expect(json["store"]["name"]).to eq "New Store"
+      expect(json["name"]).to eq "New Store"
     end
   end
 end

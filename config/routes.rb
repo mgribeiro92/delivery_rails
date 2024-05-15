@@ -13,6 +13,9 @@ Rails.application.routes.draw do
     resources :orders, only: [:index, :create, :update, :destroy]
   end
 
+  get "orders_seller/:id" => "orders#sellers"
+  post "orders/accept/:id" => "orders#accept"
+
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check
 

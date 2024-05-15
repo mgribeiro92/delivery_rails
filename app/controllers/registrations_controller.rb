@@ -67,3 +67,5 @@ class RegistrationsController < ApplicationController
       params.required(:login).permit(:email, :password)
     end
 end
+
+

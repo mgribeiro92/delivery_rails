@@ -9,16 +9,12 @@ class StoresController < ApplicationController
     if current_user.admin?
       @stores = Store.all
     else
-      @stores = Store.where(user: current_user)
+      @stores = Store.where(user: current_user).includes(:image_attachment).all
     end
   end
 
   # GET /stores/1 or /stores/1.json
   def show
-    respond_to do |format|
-      format.html { render :show }
-      format.json { render json: {store: @store, products: @store.products} }
-    end
   end
 
   # GET /stores/new
@@ -56,6 +52,9 @@ class StoresController < ApplicationController
 
   # PATCH/PUT /stores/1 or /stores/1.json
   def update
+    if store_params[:image].present? # Verifica se uma nova imagem está sendo enviada
+      @store.image.attach(store_params[:image]) # Anexa a nova imagem ao modelo
+    end
     respond_to do |format|
       if @store.update(store_params)
         format.html { redirect_to store_url(@store), notice: "Store was successfully updated." }
@@ -91,9 +90,9 @@ class StoresController < ApplicationController
       required = params.require(:store)
 
       if current_user.admin?
-        required.permit(:name, :user_id)
+        required.permit(:name, :user_id, :image)
       else
-        required.permit(:name)
+        required.permit(:name, :image)
       end
     end
 end

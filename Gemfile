@@ -42,7 +42,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing"
 
 group :development, :test do
   gem "rspec-rails"
@@ -72,3 +72,6 @@ gem 'rack-cors', require: 'rack/cors'
 gem "jwt", "~> 2.8"
 
 gem "state_machines-activerecord", "~> 0.9.0"
+
+gem 'aws-sdk-s3'
+
