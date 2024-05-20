@@ -29,10 +29,11 @@ class OrdersController < ApplicationController
     end
   end
 
-  def accept
+  def change_state
     @order = Order.find(params[:id])
+    state = params[:state]
 
-    if @order.accept!
+    if @order.state!
       render json: @order
     else
       render json: @order.errors, status: :unprocessable_entity

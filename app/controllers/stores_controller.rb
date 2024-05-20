@@ -8,6 +8,8 @@ class StoresController < ApplicationController
   def index
     if current_user.admin?
       @stores = Store.all
+    elsif current_user.buyer?
+      @stores = Store.includes(:image_attachment).all
     else
       @stores = Store.where(user: current_user).includes(:image_attachment).all
     end

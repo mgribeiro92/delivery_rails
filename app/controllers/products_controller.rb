@@ -4,6 +4,20 @@ class ProductsController < ApplicationController
   before_action :set_product, only: %i[ show update destroy ]
   rescue_from User::InvalidToken, with: :not_authorized
 
+  def index
+    if params[:store_id].present?
+      @products = Product.where(store_id: params[:store_id])
+    else
+      @products = Product.all
+    end
+  end
+
+  def products_store
+    @store = Store.find(params[:store_id])
+    @products = @store.products
+    puts(@store)
+  end
+
   def listing
     if !current_user.admin?
       redirect_to root_path, notice: "No permisson for you!"
@@ -13,8 +27,6 @@ class ProductsController < ApplicationController
   end
 
   def show
-    # image_url = @product.image_product_attachment.url if @product.image_product.attached?
-    # render json: { id: @product.id, image_url: image_url }
   end
 
   def create
@@ -28,7 +40,6 @@ class ProductsController < ApplicationController
   end
 
   def update
-    puts(product_params)
     if @product.update(product_params)
       render json: @product, status: :ok
     else
@@ -55,3 +66,4 @@ class ProductsController < ApplicationController
       params.required(:product).permit(:title, :price, :store_id, :image_product)
     end
 end
+

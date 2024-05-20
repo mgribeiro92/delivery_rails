@@ -46,7 +46,7 @@ class RegistrationsController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.role = current_credential.access
-
+  
     if @user.save
       render json: @user, status: :created
     else
@@ -67,5 +67,3 @@ class RegistrationsController < ApplicationController
       params.required(:login).permit(:email, :password)
     end
 end
-
-

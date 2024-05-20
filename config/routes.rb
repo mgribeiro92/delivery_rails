@@ -2,7 +2,9 @@ Rails.application.routes.draw do
   devise_for :users
   resources :stores
   resources :products
+
   get "listing" => "products#listing"
+  get "products/store/:store_id" => "products#products_store"
 
   post "new" => "registrations#create", as: :create_registration
   get "me" => "registrations#me"
@@ -14,7 +16,7 @@ Rails.application.routes.draw do
   end
 
   get "orders_seller/:id" => "orders#sellers"
-  post "orders/accept/:id" => "orders#accept"
+  post "change_state" => "orders#change_state"
 
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check

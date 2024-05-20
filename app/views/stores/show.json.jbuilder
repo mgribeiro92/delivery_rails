@@ -1,2 +1,1 @@
-json.partial! "stores/store", locals: { store: @store, products: @store.products }
-
+json.partial! "stores/store", store: @store
