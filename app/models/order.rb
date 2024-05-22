@@ -10,6 +10,18 @@ class Order < ApplicationRecord
     event :accept do
       transition created: :accepted
     end
+
+    event :delivery do
+      transition accepted: :delivery
+    end
+
+    event :finished do
+      transition delivery: :finished
+    end
+
+    event :rejected do
+      transition created: :rejected
+    end
   end
 
   private

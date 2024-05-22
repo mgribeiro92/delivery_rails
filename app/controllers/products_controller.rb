@@ -15,7 +15,6 @@ class ProductsController < ApplicationController
   def products_store
     @store = Store.find(params[:store_id])
     @products = @store.products
-    puts(@store)
   end
 
   def listing
@@ -66,4 +65,3 @@ class ProductsController < ApplicationController
       params.required(:product).permit(:title, :price, :store_id, :image_product)
     end
 end
-

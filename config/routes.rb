@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   devise_for :users
   resources :stores
   resources :products
+  resources :order_items
 
   get "listing" => "products#listing"
   get "products/store/:store_id" => "products#products_store"

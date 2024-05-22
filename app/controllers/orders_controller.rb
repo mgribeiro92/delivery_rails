@@ -30,10 +30,19 @@ class OrdersController < ApplicationController
   end
 
   def change_state
-    @order = Order.find(params[:id])
-    state = params[:state]
+    @order = Order.find(params[:order][:id])
+    state = params[:order][:state]
 
-    if @order.state!
+    event_method =
+    case state
+      when 'accept' then :accept!
+      when 'delivery' then :delivery!
+      when 'finished' then :finished!
+      when 'rejected' then :rejected!
+      else nil
+    end
+
+    if event_method && @order.send(event_method)
       render json: @order
     else
       render json: @order.errors, status: :unprocessable_entity
