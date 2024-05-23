@@ -24,6 +24,11 @@ class Order < ApplicationRecord
     end
   end
 
+  def calculate_total
+    self.total = order_items.sum(&:price)
+    puts(self.total)
+  end
+
   private
 
   def buyer_role
@@ -31,4 +36,6 @@ class Order < ApplicationRecord
       errors.add(:buyer, "should be a 'user.buyer'")
     end
   end
+
+
 end

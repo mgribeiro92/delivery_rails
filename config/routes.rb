@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   post "new_token" => "registrations#new_token"
 
   scope :buyers do
-    resources :orders, only: [:index, :create, :update, :destroy]
+    resources :orders, only: [:index, :create, :update, :destroy, :show]
   end
 
   get "orders_seller/:id" => "orders#sellers"

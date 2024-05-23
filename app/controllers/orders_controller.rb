@@ -1,11 +1,15 @@
 class OrdersController < ApplicationController
   skip_forgery_protection
+  before_action :set_order, only: [ :show ]
   before_action :authenticate!
   before_action :only_buyers!, only: [ :index, :create]
   rescue_from StateMachines::InvalidTransition, with: :invalid_transition
 
   def index
-    @orders = Order.where(buyer: current_user)
+    @orders = Order.where(buyer: current_user).includes(:buyer, :store, order_items: :product).order(id: :desc)
+  end
+
+  def show
   end
 
   def create
@@ -22,8 +26,7 @@ class OrdersController < ApplicationController
     @store = Store.find(params[:id])
 
     if current_user.stores.include?(@store)
-      @orders = Order.where(store: @store)
-      render json: @orders
+      @orders = Order.where(store: @store).order(id: :desc)
     else
       render json: {message: "Store not include to user"}
     end
@@ -50,6 +53,10 @@ class OrdersController < ApplicationController
   end
 
   private
+
+  def set_order
+    @order = Order.find(params[:id])
+  end
 
   def order_params
     params.require(:order).permit([:store_id])
