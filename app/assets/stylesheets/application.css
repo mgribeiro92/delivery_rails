@@ -17,6 +17,8 @@
 
 body {
   font-family: 'Bree Serif', serif;
+  margin: 0;
+  padding: 0;
 }
 
 .card-new-store {
@@ -28,4 +30,58 @@ body {
   border-radius: 10px;
   padding: 10px;
   margin: 20px;
+}
+
+
+/* Estilos para a barra de navegação */
+.navbar {
+  background-color: #333;
+  color: white;
+  padding: 10px;
+}
+
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  display: inline;
+  margin-right: 10px;
+}
+
+.navbar ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+/* Estilos para a barra lateral */
+.sidebar {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  float: left; /* Para alinhar à esquerda */
+  height: 100vmax;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  color: #333;
+  text-decoration: none;
+}
+
+/* Estilos para o conteúdo principal */
+main {
+  margin-left: 220px; /* Para evitar que o conteúdo principal seja ocultado pela barra lateral */
+  padding: 20px;
 }
