@@ -67,8 +67,11 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product.destroy!
-    render json: {message: "Product destroyed!"}
+    if current_user.admin?
+      if @product.update(soft_delete: !@product.soft_delete)
+        redirect_to product_url(@product), notice: "Produto #{@product.title} foi mudado seu status para #{@product.status}!"
+      end
+    end
   end
 
   private

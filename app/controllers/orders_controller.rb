@@ -9,6 +9,12 @@ class OrdersController < ApplicationController
     @orders = Order.where(buyer: current_user).includes(:buyer, :store, order_items: :product).order(id: :desc)
   end
 
+  def listing
+    if current_user.admin?
+      @orders = Order.all
+    end
+  end
+
   def show
   end
 

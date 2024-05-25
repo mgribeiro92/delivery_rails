@@ -10,4 +10,5 @@ class Store < ApplicationRecord
   def ensure_seller
     self.user = nil if self.user && !self.user.seller?
   end
+
 end

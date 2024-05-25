@@ -1,29 +1,53 @@
-<p style="color: green"><%= notice %></p>
+<div class="users-info">
+  <p style="color: green"><%= notice %></p>
 
-<h1>Usuarios</h1>
-<%= link_to "Novo Usuario", new_user_path %>
-<table>
-  <thead>
-    <tr>
-      <th>Email</th>
-      <th>Role</th>
-      <th>Ver usuario</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @users.each do |user| %>
-    <tr>      
-      <td><%= user.email %></td>
-      <td><%= user.role %></td>  
-      <td> <%= link_to "Ver usuario", user %> </td>
-    </tr>
-    <% end %>
-  </tbody>
+  <div class="user-title">
+    <div class="users">Usuarios cadastrados!</div>
+    <%= link_to "Novo Usuario", new_user_path %>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Email</th>
+        <th>Id</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Ver usuario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+      <tr>      
+        <td><%= user.email %></td>
+        <td><%= user.id %></td>
+        <td><%= user.role %></td>
+        <td><%= user.status %>
+        <td> <%= link_to "Ver usuario", user %> </td>
+      </tr>
+      <% end %>
+    </tbody>
 
-</table>
-
+  </table>
+</div>
 
 <style>
+
+  .users-info {
+    margin: 10px;
+  }
+
+  .user-title {
+    display: flex;
+    align-items: center;
+  }
+
+  .users {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+  }
+
   table {
     border-collapse: collapse;
     width: auto;
@@ -40,7 +64,7 @@
   }
 
   th {
-    background-color: #4CAF50;
+    background-color: gray;
     color: white;
 }
 </style>

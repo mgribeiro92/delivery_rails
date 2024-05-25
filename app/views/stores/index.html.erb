@@ -1,29 +1,53 @@
-<p style="color: green"><%= notice %></p>
 
-<h1>Stores</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Nome</th>
-      <th>Usuario</th>
-      <th>Ver loja</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @stores.each do |store| %>
-    <tr>      
-      <td><%= store.name %></td>
-      <td><%= store.user.email %>
-      <td> <%= link_to "Ver Loja", store %> </td>
-    </tr>
-    <% end %>
-  </tbody>
 
-</table>
+<div class="stores-info">
+  <p style="color: green"><%= notice %></p>
+  <div class="stores-title">
+    <div class="stores">Lojas cadastradas!</div>
+    <%= link_to "Nova Loja", new_store_path %>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Usuario</th>
+        <th>Status</th>
+        <th>Ver loja</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @stores.each do |store| %>
+      <tr>      
+        <td><%= store.name %></td>
+        <td><%= store.user.email %>
+        <td><%= store.status %>
+        <td> <%= link_to "Ver Loja", store %> </td>
+      </tr>
+      <% end %>
+    </tbody>
 
-<%= link_to "New store", new_store_path %>
+  </table>
+</div>
+
 
 <style>
+
+  .stores-title {
+    display: flex;
+    align-items: center;
+  }
+
+  .stores {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+  }
+
+  .stores-info {
+    margin: 10px;
+  }
+
   table {
     border-collapse: collapse;
     width: 800px;
@@ -40,7 +64,7 @@
   }
 
   th {
-    background-color: #4CAF50;
+    background-color: gray;
     color: white;
   }
 </style>

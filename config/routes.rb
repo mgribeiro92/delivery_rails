@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   post "new_token" => "registrations#new_token"
   put "update_user/:id" => "registrations#update"
 
+  get "orders" => "orders#listing", as: :listing_orders
+
   scope :buyers do
     resources :orders, only: [:index, :create, :update, :destroy, :show]
   end

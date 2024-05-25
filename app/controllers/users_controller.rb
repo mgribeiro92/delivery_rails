@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [ :show, :edit, :update ]
+  before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 
   def index
     @users = User.all
@@ -37,6 +37,14 @@ class UsersController < ApplicationController
       redirect_to @user, notice: 'Usuário criado com sucesso. Um e-mail para definir a senha foi enviado.'
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    if current_user.admin?
+      if @user.update(soft_delete: !@user.soft_delete)
+        redirect_to user_url(@user), notice: "Usuario #{@user.email} foi mudado seu status para #{@user.status}!"
+      end
     end
   end
 

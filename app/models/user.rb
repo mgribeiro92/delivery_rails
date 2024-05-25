@@ -35,4 +35,6 @@ class User < ApplicationRecord
     refresh_token.token
   end
 
+
+
 end

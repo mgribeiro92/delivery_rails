@@ -1,10 +1,32 @@
-<p style="color: green"><%= notice %></p>
-
 <div class="user-info">
-  <div class="user-email"><%= @user.email %></div>
-  <div class="user-email"><%= @user.role %></div>
+  <p style="color: green"><%= notice %></p>
+  <div class="user-title">Usuario nº <%= @user.id %> </div>
+  <div><span class="user-atributes">Email:</span><%= @user.email %></div>
+  <div><span class="user-atributes">Role:</span><%= @user.role %></div>
+  <div><span class="user-atributes">Status:</span><%= @user.status %></div>
   <%= link_to "Editar Usuario", edit_user_path(@user) %> |
   <%= link_to "Voltar Usuarios", users_path %>
-  <%= button_to "Delete Lógico", @user, method: :delete, class:"store-destroy" %>
+  <%= button_to "Delete Lógico", @user, method: :delete, class:"btn-form" %>
 </div>
+
+<style>
+
+  .user-info {
+    margin: 10px
+  }
+
+  .user-title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+  }
+
+  .user-atributes {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+</style>
 

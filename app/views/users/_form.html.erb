@@ -19,10 +19,10 @@
 
   <div class="form-group">
     <%= form.label :role, style: "display: block" %>
-    <%= form.select :role, [["Seller", "seller"], ["Buyer", "buyer"]],  class: "form-control" %>
+    <%= form.select :role, [["Seller", "seller"], ["Buyer", "buyer"]], {}, class: "form-control" %>
   </div>
 
-  <%= form.submit class: "btn btn-primary", style: "margin-top: 10px" %>
+  <%= form.submit class: "btn-form" %>
 
 <% end %>
 

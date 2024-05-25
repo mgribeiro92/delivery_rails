@@ -70,11 +70,10 @@ class StoresController < ApplicationController
 
   # DELETE /stores/1 or /stores/1.json
   def destroy
-    @store.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to stores_url, notice: "Store was successfully destroyed." }
-      format.json { render json: {message: "Store destroyed!"} }
+    if current_user.admin?
+      if @store.update(soft_delete: !@store.soft_delete)
+        redirect_to store_url(@store), notice: "Loja #{@store.name} foi mudado seu status para #{@store.status}!"
+      end
     end
   end
 
