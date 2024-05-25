@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, skip: [:registrations]
   resources :stores
   resources :products
   resources :order_items
+  resources :users
 
   get "listing" => "products#listing"
   get "products/store/:store_id" => "products#products_store"
@@ -11,9 +12,14 @@ Rails.application.routes.draw do
   get "me" => "registrations#me"
   post "sign_in" => "registrations#sign_in"
   post "new_token" => "registrations#new_token"
+  put "update_user/:id" => "registrations#update"
 
   scope :buyers do
     resources :orders, only: [:index, :create, :update, :destroy, :show]
+  end
+
+  resources :stores do
+    resources :products, only: [:index]
   end
 
   get "orders_seller/:id" => "orders#sellers"

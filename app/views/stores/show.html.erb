@@ -1,10 +1,72 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @store %>
-
-<div>
+<div class="store-info">
+  <div class="store-name"><%= @store.name %></div>
   <%= link_to "Edit this store", edit_store_path(@store) %> |
   <%= link_to "Back to stores", stores_path %>
-
-  <%= button_to "Destroy this store", @store, method: :delete %>
+  <%= button_to "Destroy this store", @store, method: :delete, class:"store-destroy" %>
 </div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Preço</th>
+      <th>Ver Produto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @store.products.each do |product| %>
+    <tr>      
+      <td><%= product.title %></td>
+      <td><%= product.price %>
+      <td> <%= link_to "Ver Produto", product %></td>
+    </tr>
+    <% end %>
+  </tbody>
+
+<style>
+
+  .store-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px;
+  }
+
+  .store-name {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+    gap: 50px;
+  }
+
+  .store-destroy {
+    margin-left: 30px;
+    background: transparent;
+    border-radius: 5px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 800px;
+    margin: 10px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  th {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+</style>

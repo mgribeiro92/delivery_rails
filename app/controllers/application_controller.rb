@@ -34,6 +34,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def buyer?
+    (current_user && current_user.buyer? ) && current_credential.buyer?
+  end
+
   def only_buyers!
     is_buyer = (current_user && current_user.buyer? ) && current_credential.buyer?
 

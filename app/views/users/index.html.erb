@@ -1,0 +1,46 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Usuarios</h1>
+<%= link_to "Novo Usuario", new_user_path %>
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Ver usuario</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+    <tr>      
+      <td><%= user.email %></td>
+      <td><%= user.role %></td>  
+      <td> <%= link_to "Ver usuario", user %> </td>
+    </tr>
+    <% end %>
+  </tbody>
+
+</table>
+
+
+<style>
+  table {
+    border-collapse: collapse;
+    width: auto;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  th {
+    background-color: #4CAF50;
+    color: white;
+}
+</style>

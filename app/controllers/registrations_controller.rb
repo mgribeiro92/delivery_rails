@@ -1,5 +1,5 @@
 class RegistrationsController < ApplicationController
-  skip_forgery_protection only: [ :create, :me, :sign_in, :new_token]
+  skip_forgery_protection only: [ :create, :me, :sign_in, :new_token, :update ]
   before_action :authenticate!, only: [ :me ]
   rescue_from User::InvalidToken, with: :not_authorized
 
@@ -46,9 +46,19 @@ class RegistrationsController < ApplicationController
   def create
     @user = User.new(user_params)
     @user.role = current_credential.access
-  
+
     if @user.save
       render json: @user, status: :created
+    else
+      render json: @user.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    @user = User.find(params[:id])
+    puts(@user)
+    if @user.update(user_params)
+      render json: @user, status: :ok
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -61,6 +71,10 @@ class RegistrationsController < ApplicationController
 
     def user_params
       params.required(:user).permit(:email, :password, :password_confirmation)
+    end
+
+    def set_user
+      @user = User.find(params[:id])
     end
 
     def sign_in_params

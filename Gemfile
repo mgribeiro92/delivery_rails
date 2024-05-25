@@ -74,3 +74,7 @@ gem "jwt", "~> 2.8"
 gem "state_machines-activerecord", "~> 0.9.0"
 
 gem 'aws-sdk-s3'
+
+gem "kaminari", "~> 1.2"
+
+gem 'letter_opener', group: :development

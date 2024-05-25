@@ -1,14 +1,17 @@
 class ProductsController < ApplicationController
   skip_forgery_protection
   before_action :authenticate!
-  before_action :set_product, only: %i[ show update destroy ]
+  before_action :set_product, only: %i[ show update destroy edit ]
   rescue_from User::InvalidToken, with: :not_authorized
 
   def index
-    if params[:store_id].present?
-      @products = Product.where(store_id: params[:store_id])
-    else
-      @products = Product.all
+    respond_to do |format|
+      format.json do
+        if buyer?
+          page = params.fetch(:page, 1)
+          @products = Product.where(store_id: params[:store_id]).order(:title).page(page).includes(:image_product_attachment)
+        end
+      end
     end
   end
 
@@ -28,6 +31,19 @@ class ProductsController < ApplicationController
   def show
   end
 
+  def new
+    @product = Store.new
+    if current_user.admin?
+      @stores = Store.all
+    end
+  end
+
+  def edit
+    if current_user.admin?
+      @stores = Store.all
+    end
+  end
+
   def create
     @product = Product.new(product_params)
 
@@ -39,10 +55,14 @@ class ProductsController < ApplicationController
   end
 
   def update
-    if @product.update(product_params)
-      render json: @product, status: :ok
-    else
-      render json: @product.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @product.update(product_params)
+        format.html { redirect_to store_url(@product.store), notice: "Product was successfully updated." }
+        format.json { render :show, status: :ok, location: @product }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @product.errors, status: :unprocessable_entity }
+      end
     end
   end
 

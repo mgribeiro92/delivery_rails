@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="user-info">
+  <div class="user-email"><%= @user.email %></div>
+  <div class="user-email"><%= @user.role %></div>
+  <%= link_to "Editar Usuario", edit_user_path(@user) %> |
+  <%= link_to "Voltar Usuarios", users_path %>
+  <%= button_to "Delete Lógico", @user, method: :delete, class:"store-destroy" %>
+</div>
+

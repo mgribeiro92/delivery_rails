@@ -1,0 +1,8 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="store-info">
+  <div class="store-name"><%= @product.title %></div>
+  <%= link_to "Editar esse produto", edit_product_path(@product) %> |
+  <%= link_to "Voltar para a loja do produto", store_path %>
+  <%= button_to "Delete lógico desse produto!", @product, method: :delete, class:"store-destroy" %>
+</div>
