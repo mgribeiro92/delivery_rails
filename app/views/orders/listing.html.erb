@@ -1,1 +1,64 @@
-<h1>Teste dos pedidos</h1>
+<div class="orders">
+  <p style="color: green"><%= notice %></p>
+  <h3>Pedidos</h3>
+
+  <div class="cards">
+    <% @orders.each do |order| %>
+      <div class="card-order">
+        <div class="order-info">
+          <div>Pedido: <%= order.id %></div>
+          <div>Usuario: <%= order.buyer.email %></div>
+          <div>Loja: <%= order.store.name %></div>
+          <div>Valor Total: <%= order.total %></div>
+          <%= link_to "Editar Pedido", edit_order_path(order) %>
+        </div>
+        <div class="order-item-info">
+          <div>Estado do Pedido: <%= order.state %></div>
+          <div>Itens do produto:  </div>
+          <% order.order_items.each do |order_item| %>
+            <p><%= order_item.amount %>x <%= order_item.product.title %> - <%= order_item.price %><p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+
+  .orders {
+    margin: 10px;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .card-order {
+    display: flex;
+    border: 2px solid gray;
+    border-radius: 10px;
+    width: 600px;
+    padding: 10px;
+  }
+
+  .order-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    border-right: 2px solid gray;
+    margin-right: 10px;
+  }
+
+  .order-item-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  p {
+    margin: 0
+  }
+</style>

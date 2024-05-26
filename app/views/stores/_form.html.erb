@@ -2,7 +2,6 @@
   <% if store.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(store.errors.count, "error") %> prohibited this store from being saved:</h2>
-
       <ul>
         <% store.errors.each do |error| %>
           <li><%= error.full_message %></li>

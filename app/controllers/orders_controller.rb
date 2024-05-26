@@ -1,8 +1,9 @@
 class OrdersController < ApplicationController
   skip_forgery_protection
-  before_action :set_order, only: [ :show ]
+  before_action :set_order, only: [ :show, :edit, :update ]
   before_action :authenticate!
-  before_action :only_buyers!, only: [ :index, :create]
+  before_action :only_buyers!, only: [ :index, :create ]
+  before_action :set_order_update, only: %i[ edit update ]
   rescue_from StateMachines::InvalidTransition, with: :invalid_transition
 
   def index
@@ -11,11 +12,14 @@ class OrdersController < ApplicationController
 
   def listing
     if current_user.admin?
-      @orders = Order.all
+      @orders = Order.all.includes(:buyer, :store, order_items: :product).order(id: :desc)
     end
   end
 
   def show
+  end
+
+  def edit
   end
 
   def create
@@ -25,6 +29,14 @@ class OrdersController < ApplicationController
       render json: @order
     else
       render json: {errors: @order.errors, status: :unprocessable_entity}
+    end
+  end
+
+  def update
+    if @order.update(order_params)
+      redirect_to listing_orders_path, notice: "Pedido atualizado com sucesso!"
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -65,11 +77,19 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit([:store_id])
+    params.require(:order).permit(:store_id, :buyer_id, :total, :state)
   end
 
   def invalid_transition(e)
     render json: { error: e.message }, status: :unprocessable_entity
+  end
+
+  def set_order_update
+    if current_user.admin?
+      @buyers = User.where(role: :buyer)
+      @stores = Store.all
+      @products = @order.store.products
+    end
   end
 
 end

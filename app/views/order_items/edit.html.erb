@@ -1,0 +1,37 @@
+<div class="title">Editar Produto do Pedido</div>
+<div class="update-order-item">
+  <div class="sub-title">Pedido #<%= @order_item.order.id %></div>
+  <div class="sub-title">Loja: <%= @order_item.order.store.name %></div>
+  <div class="order-item">
+    <%= render "form", order_item: @order_item %>
+  </div>
+</div>
+
+<style>
+
+  .update-order-item {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+  }
+
+  .order-item {
+    display: flex;
+    width: 500px;
+    margin-top: 20px;
+  }
+  
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px;
+  }
+
+  .sub-title {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+</style>

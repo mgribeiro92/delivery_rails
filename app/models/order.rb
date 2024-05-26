@@ -4,7 +4,8 @@ class Order < ApplicationRecord
   has_many :order_items
   has_many :products, through: :order_items
 
-  validate :buyer_role
+  validate :buyer_role, :price_final
+  validate :store_product, on: :update
 
   state_machine initial: :created do
     event :accept do
@@ -26,7 +27,6 @@ class Order < ApplicationRecord
 
   def calculate_total
     self.total = order_items.sum(&:price)
-    puts(self.total)
   end
 
   private
@@ -34,6 +34,25 @@ class Order < ApplicationRecord
   def buyer_role
     if buyer && !buyer.buyer?
       errors.add(:buyer, "should be a 'user.buyer'")
+    end
+  end
+
+  def store_product
+    if products.any? { |product| product.store.id != self.store.id }
+      errors.add(
+        :order,
+        "should belong to 'Store': #{products.first.store.name}"
+      )
+    end
+  end
+
+  def price_final
+    price_order_items = self.order_items.sum(&:price)
+    if price_order_items != self.total
+      errors.add(
+        :order,
+        "value must be equal to the sum of order_items: #{price_order_items}"
+      )
     end
   end
 

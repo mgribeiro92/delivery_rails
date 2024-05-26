@@ -1,0 +1,34 @@
+<%= form_with(model: order) do |form| %>
+  <% if order.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(order.errors.count, "erro") %> proibindo esse pedido de ser salvo:</h2>
+      <ul>
+        <% order.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :Comprador, style: "display: block" %>
+    <%= form.collection_select :buyer_id, @buyers, :id, :email, { prompt: "Escolha um comprador" }, { class: "form-control" } %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :Loja, style: "display: block" %>
+    <%= form.collection_select :store_id, @stores, :id, :name, { prompt: "Escolha um loja" }, { class: "form-control" } %>
+  </div>
+
+    <div class="form-group">
+    <%= form.label :state, style: "display: block" %>
+    <%= form.select :state, [["accepted"], ["delivery"], ["finished"], ["rejected"]], {}, { class: "form-control" } %>
+  </div>
+
+  <div style="margin-top: 20px">Valor Total do Pedido: <%= order.total %></div>
+
+  <%= form.submit class:"btn-form" %>
+
+<% end %>
+
+

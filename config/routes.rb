@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   get "orders" => "orders#listing", as: :listing_orders
 
   scope :buyers do
-    resources :orders, only: [:index, :create, :update, :destroy, :show]
+    resources :orders, only: [:index, :create, :update, :destroy, :show, :edit]
   end
 
   resources :stores do

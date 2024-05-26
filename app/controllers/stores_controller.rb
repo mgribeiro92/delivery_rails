@@ -2,6 +2,7 @@ class StoresController < ApplicationController
   skip_forgery_protection only: [ :create, :update, :destroy ]
   before_action :authenticate!
   before_action :set_store, only: %i[ show edit update destroy ]
+  before_action :set_store_update, only: %i[ edit update ]
   rescue_from User::InvalidToken, with: :not_authorized
 
   # GET /stores or /stores.json
@@ -29,9 +30,6 @@ class StoresController < ApplicationController
 
   # GET /stores/1/edit
   def edit
-    if current_user.admin?
-      @sellers = User.where(role: :seller)
-    end
   end
 
   # POST /stores or /stores.json
@@ -94,6 +92,14 @@ class StoresController < ApplicationController
         required.permit(:name, :user_id, :image)
       else
         required.permit(:name, :image)
+      end
+    end
+
+    def set_store_update
+      if current_user.admin?
+        @sellers = User.where(role: :seller)
+      else
+        @sellers = []
       end
     end
 end
