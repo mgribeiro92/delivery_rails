@@ -4,7 +4,8 @@ class OrderItem < ApplicationRecord
 
   validate :store_product
   after_save :update_order_total
-  
+  after_destroy :update_order_total
+
   private
 
   def update_order_total
@@ -12,10 +13,16 @@ class OrderItem < ApplicationRecord
     order.save
   end
 
+  # def total_price
+  #   amount * product.price
+  # end
+
   def store_product
-    if product && order && product.store.id != order.store.id
+    if product && order && product.store.name != order.store.name
+    puts(product.store.name)
+    puts(order.store.name)
       errors.add(
-        :product,
+        :order,
         "should belong to 'Store': #{order.store.name}"
       )
     end

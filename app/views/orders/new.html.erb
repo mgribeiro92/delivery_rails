@@ -1,0 +1,39 @@
+<div class="title">Novo Pedido</div>
+<div class="update-order">
+  <div class="order">    
+    <div class="sub-title">Pedido # <%= @order.id %> </div>
+    <%= render "form", order: @order %>
+    <div><%= link_to "Voltar Pedidos", listing_orders_path %></div>
+  </div>
+</div>
+
+<style>
+
+  .update-order {
+    display: flex;
+    margin: 10px;
+  }
+
+  .order {
+    width: 400px;
+    margin-right: 40px;
+  }
+
+  .order-items {
+    flex: 1;
+  }
+
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px;
+  }
+
+  .sub-title {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+<style>

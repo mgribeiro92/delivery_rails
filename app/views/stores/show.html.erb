@@ -1,8 +1,9 @@
 <p style="color: green"><%= notice %></p>
 
 <div class="store-info">
-  <div class="store-name"><%= @store.name %> - <%= @store.status %></div>
+  <div class="store-name"><%= @store.name %></div>
   <%= link_to "Editar Loja", edit_store_path(@store) %> |
+  <%= link_to "Novo Produto", new_product_path %> | 
   <%= link_to "Todas as Lojas", stores_path %>
   <% if @store.soft_delete %>
     <%= button_to "Ativar", @store, method: :delete, class:"store-destroy" %>

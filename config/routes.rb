@@ -12,20 +12,20 @@ Rails.application.routes.draw do
   get "me" => "registrations#me"
   post "sign_in" => "registrations#sign_in"
   post "new_token" => "registrations#new_token"
-  put "update_user/:id" => "registrations#update"
 
   get "orders" => "orders#listing", as: :listing_orders
+  get "orders_seller/:id" => "orders#sellers"
+  post "change_state" => "orders#change_state"
 
   scope :buyers do
-    resources :orders, only: [:index, :create, :update, :destroy, :show, :edit]
+    resources :orders, only: [ :index, :create, :show, :update ]
   end
+
+  resources :orders, only: [ :destroy, :new, :edit ]
 
   resources :stores do
     resources :products, only: [:index]
   end
-
-  get "orders_seller/:id" => "orders#sellers"
-  post "change_state" => "orders#change_state"
 
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check

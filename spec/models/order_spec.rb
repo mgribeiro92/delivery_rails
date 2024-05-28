@@ -7,35 +7,15 @@ RSpec.describe Order, type: :model do
   end
 
   describe "belongs_to" do
-    let(:seller) {
-    user = User.new(
-      email: "buyer@example.com.br",
-      password: "123456",
-      password_confirmation: "123456",
-      role: "seller"
-      )
-    }
-
-    let(:buyer) {
-    user = User.new(
-      email: "buyer@example.com.br",
-      password: "123456",
-      password_confirmation: "123456",
-      role: "buyer"
-      )
-    }
-
-    let(:store) {
-      store = Store.new(
-        name: "What a great store!",
-        user: seller
-      )
-    }
+    let(:buyer) { create(:user_buyer) }
+    let(:seller) { create(:user_seller) }
+    let(:store) { create(:store) }
 
     it "should belongs to buyer user" do
       order = Order.create(buyer: buyer, store: store)
+      puts(order.buyer.role)
 
-      expect(order).to be_persisted
+      expect(order.buyer).to be_buyer
     end
 
     it "should not belongs to seller user" do

@@ -1,5 +1,3 @@
-
-
 <div class="stores-info">
   <p style="color: green"><%= notice %></p>
   <div class="stores-title">
@@ -19,8 +17,8 @@
       <% @stores.each do |store| %>
       <tr>      
         <td><%= store.name %></td>
-        <td><%= store.user.email %>
-        <td><%= store.status %>
+        <td><%= store.user.email %></td>
+        <td><%= store.status %></td>
         <td> <%= link_to "Ver Loja", store %> </td>
       </tr>
       <% end %>

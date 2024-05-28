@@ -37,23 +37,9 @@ RSpec.describe Store, type: :model do
   end
 
   describe "belongs_to" do
-    let(:seller) {
-    user = User.new(
-      email: "seller@example.com.br",
-      password: "123456",
-      password_confirmation: "123456",
-      role: "seller"
-    )
-  }
+    let(:seller) { create(:user_seller) }
 
-    let(:admin) {
-      user = User.new(
-        email: "admin@example.com.br",
-        password: "123456",
-        password_confirmation: "123456",
-        role: "admin"
-      )
-    }
+    let(:admin) { create(:user_admin) }
 
     it "should not belong to admin user" do
       store = Store.create(name: "store", user: admin)
@@ -61,5 +47,14 @@ RSpec.describe Store, type: :model do
       expect(store.errors.full_messages).to eq ["User must exist"]
     end
 
+    it "should belong to seller user" do
+      store = Store.create(name: "store", user: seller)
+
+      expect(store.user).to be_seller
+    end
+
   end
+
+
+
 end

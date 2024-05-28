@@ -2,14 +2,20 @@ class ProductsController < ApplicationController
   skip_forgery_protection
   before_action :authenticate!
   before_action :set_product, only: %i[ show update destroy edit ]
+  before_action :set_product_create, only: [ :new, :create ]
   rescue_from User::InvalidToken, with: :not_authorized
 
   def index
     respond_to do |format|
       format.json do
         if buyer?
+          puts("ta passando no buyer")
           page = params.fetch(:page, 1)
-          @products = Product.where(store_id: params[:store_id]).order(:title).page(page).includes(:image_product_attachment)
+          @products = Product.where(
+            store_id: params[:store_id]).
+            order(:title).page(page).
+            includes(:image_product_attachment
+            )
         end
       end
     end
@@ -25,17 +31,13 @@ class ProductsController < ApplicationController
       redirect_to root_path, notice: "No permisson for you!"
     end
 
-    @products = Product.includes(:store)
+    @products = Product.includes(:store).order(id: :desc)
   end
 
   def show
   end
 
   def new
-    @product = Store.new
-    if current_user.admin?
-      @stores = Store.all
-    end
   end
 
   def edit
@@ -47,10 +49,14 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new(product_params)
 
-    if @product.save
-      render json: @product, status: :created
-    else
-      render json: @product.errors, status: :unprocessable_entity
+    respond_to do |format|
+      if @product.save
+        format.html { redirect_to listing_path, notice: "Produto criado com sucesso"}
+        format.json { render json: @product, status: :created }
+      else
+        format.html { render :new, status: :unprocessable_entity}
+        format.json { render json: @product.errors, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -86,5 +92,12 @@ class ProductsController < ApplicationController
 
     def product_params
       params.required(:product).permit(:title, :price, :store_id, :image_product)
+    end
+
+    def set_product_create
+      @product = Product.new
+      if current_user.admin?
+        @stores = Store.all
+      end
     end
 end

@@ -2,8 +2,9 @@ class OrdersController < ApplicationController
   skip_forgery_protection
   before_action :set_order, only: [ :show, :edit, :update ]
   before_action :authenticate!
-  before_action :only_buyers!, only: [ :index, :create ]
-  before_action :set_order_update, only: %i[ edit update ]
+  before_action :only_buyers!, only: [ :index ]
+  before_action :set_order_update, only: [ :edit, :update ]
+  before_action :set_order_create, only: %i[ new create]
   rescue_from StateMachines::InvalidTransition, with: :invalid_transition
 
   def index
@@ -22,13 +23,26 @@ class OrdersController < ApplicationController
   def edit
   end
 
-  def create
-    @order = Order.new(order_params) { |o| o.buyer = current_user }
+  def new
+    @order = Order.new
+  end
 
-    if @order.save
-      render json: @order
+  def create
+    if request.format.json?
+      @order = Order.new(order_params) { |o| o.buyer = current_user }
     else
-      render json: {errors: @order.errors, status: :unprocessable_entity}
+      @order = Order.new(order_params)
+    end
+
+    @order.total = 0
+    respond_to do |format|
+      if @order.save
+        format.html { redirect_to new_order_item_path(order_id: @order.id), notice: "Pedido criado com sucesso, pode colocar os produtos!"}
+        format.json { render json: @order }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @order.errors }
+      end
     end
   end
 
@@ -36,6 +50,7 @@ class OrdersController < ApplicationController
     if @order.update(order_params)
       redirect_to listing_orders_path, notice: "Pedido atualizado com sucesso!"
     else
+      puts('ta passando no erro do update aqui')
       render :edit, status: :unprocessable_entity
     end
   end
@@ -89,6 +104,13 @@ class OrdersController < ApplicationController
       @buyers = User.where(role: :buyer)
       @stores = Store.all
       @products = @order.store.products
+    end
+  end
+
+  def set_order_create
+    if current_user.admin?
+      @stores = Store.all
+      @buyers = User.where(role: :buyer)
     end
   end
 

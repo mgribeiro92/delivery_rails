@@ -60,6 +60,8 @@ RSpec.configure do |config|
     Rails.root.join('spec/fixtures')
   ]
 
+  config.include FactoryBot::Syntax::Methods
+
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
@@ -95,3 +97,4 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+

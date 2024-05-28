@@ -21,6 +21,10 @@
     </div>
   </div>
 
+  <% if @order %>
+    <%= form.hidden_field :order_id, value: @order.id %>
+  <% end %>
+
   <%= form.submit class:"btn-form" %>
 
 <% end %>

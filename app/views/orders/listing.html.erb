@@ -1,7 +1,9 @@
 <div class="orders">
-  <p style="color: green"><%= notice %></p>
-  <h3>Pedidos</h3>
-
+<p style="color: green"><%= notice %></p>
+  <div class="new-order">    
+    <div class="title">Pedidos</div>
+    <div><%= link_to "Novo Pedido", new_order_path %></div>
+  </div>
   <div class="cards">
     <% @orders.each do |order| %>
       <div class="card-order">
@@ -28,6 +30,19 @@
 
   .orders {
     margin: 10px;
+  }
+
+  .new-order {
+    display: flex;
+    align-items: center;
+  }
+  
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px;
+    margin-right: 100px;
   }
 
   .cards {

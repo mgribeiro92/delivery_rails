@@ -2,16 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "/stores", type: :request do
 
-  let(:user) {
-    user = User.new(
-      email: "user@example.com.br",
-      password: "123456",
-      password_confirmation: "123456",
-      role: "seller"
-    )
-    user.save!
-    user
-  }
+  let(:user) { create(:user_seller) }
 
   let(:valid_attributes) {
     {name: "Greatest Restaurant", user: user}
@@ -21,9 +12,7 @@ RSpec.describe "/stores", type: :request do
     {name: nil}
   }
 
-  before {
-    sign_in(user)
-  }
+  before { sign_in(user) }
 
   describe "GET /index" do
     it "renders a successful response" do
@@ -121,27 +110,26 @@ RSpec.describe "/stores", type: :request do
   describe "DELETE /destroy" do
     it "destroys the requested store" do
       store = Store.create! valid_attributes
-      expect {
-        delete store_url(store)
-      }.to change(Store, :count).by(-1)
+      expect { delete store_url(store) }.to change(Store, :count).by(0)
     end
 
-    it "redirects to the stores list" do
+    it "redirects to the store" do
       store = Store.create! valid_attributes
       delete store_url(store)
-      expect(response).to redirect_to(stores_url)
+      expect(response).to redirect_to(store_url(store))
     end
+
+    it "store change this status" do
+      store = Store.create! valid_attributes
+      delete store_url(store)
+      store.reload
+      expect(store.soft_delete).to eq(true)
+    end
+
   end
 
   context "admin" do
-    let(:admin) {
-      User.create(
-        email: "admin@example.com",
-        password: "123456",
-        password_confirmation: "123456",
-        role: :admin
-      )
-    }
+    let(:admin) { create(:user_admin) }
 
     before {
       Store.create!(name: "Store 1", user: user)

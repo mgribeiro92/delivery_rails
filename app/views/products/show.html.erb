@@ -2,6 +2,7 @@
 
 <div class="product-info">
   <div class="product-name"><%= @product.title %></div>
+  <div><span class="product-atributes">Loja:</span><%= @product.store.name %></div>
   <div><span class="product-atributes">Price:</span><%= @product.price %></div>
   <div><span class="product-atributes">Status:</span><%= @product.status %></div>
   <%= link_to "Editar Produto", edit_product_path(@product) %> |

@@ -1,3 +1,4 @@
+<p style="color: green"><%= notice %></p>
 <div class="title">Editar Pedido</div>
 <div class="update-order">
   <div class="order">    
@@ -7,11 +8,15 @@
   </div>
   <div class="order-items">
     <div class="sub-title">Itens do Pedido:</div>
-    <div class="order-item">  
+    <div class="order-item">
       <% @order.order_items.each do |order_item| %>
-        <div><%= order_item.amount %>x <%= order_item.product.title %> - R$ <%= order_item.price %></div>
-        <div><%= link_to "Editar Produto", edit_order_item_path(order_item)  %></div>
+        <div class="order-item-info">
+          <div><%= order_item.amount %>x <%= order_item.product.title %> - R$ <%= order_item.price %></div>
+          <div><%= link_to "Editar Produto", edit_order_item_path(order_item)  %></div>
+          <div><%= button_to "Remover Produto", order_item, method: :delete, data: { confirm: "Tem certeza que deseja remover este produto do pedido?" } %></div>
+        </div>
       <% end %>
+      <div><%= link_to "Novo Produto", new_order_item_path(order_id: @order.id) %></div>
     </div>    
   </div>
 <div>
@@ -30,6 +35,15 @@
   }
 
   .order-items {
+    flex: 1;
+  }
+
+
+  .order-item-info {
+    display: flex;
+  }
+
+  .order-item-info > div {
     flex: 1;
   }
 

@@ -8,8 +8,8 @@
   <table>
     <thead>
       <tr>
-        <th>Email</th>
         <th>Id</th>
+        <th>Email</th>
         <th>Role</th>
         <th>Status</th>
         <th>Ver usuario</th>
@@ -18,8 +18,8 @@
     <tbody>
       <% @users.each do |user| %>
       <tr>      
-        <td><%= user.email %></td>
         <td><%= user.id %></td>
+        <td><%= user.email %></td>
         <td><%= user.role %></td>
         <td><%= user.status %>
         <td> <%= link_to "Ver usuario", user %> </td>

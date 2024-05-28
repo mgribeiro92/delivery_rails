@@ -1,13 +1,70 @@
-<h1>Product Listing</h1>
+<div class="stores-info">
+  <p style="color: green"><%= notice %></p>
+  <div class="stores-title">
+    <div class="stores">Prdutos cadastradas!</div>
+    <%= link_to "Novo Produto", new_product_path %>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Produto</th>
+        <th>Loja</th>
+        <th>Preço</th>
+        <th>Status</th>
+        <th>Ver loja</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @products.each do |product| %>
+      <tr>      
+        <td><%= product.title %></td>
+        <td><%= product.store.name %></td>
+        <td><%= product.price %></td>
+        <td><%= product.status %></td>
+        <td> <%= link_to "Ver Produto", product %></td>
+      </tr>
+      <% end %>
+    </tbody>
 
-<div id="products">
-  <% @products.each do |product| %>
-    <div>
-        <h3>Produto</h3>
-        <%= product.title %>
-        <h3>Loja</h3>
-        <%= product.store.name %> 
-        <hr>        
-    </div>
-  <% end %>
+  </table>
 </div>
+
+
+<style>
+
+  .stores-title {
+    display: flex;
+    align-items: center;
+  }
+
+  .stores {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+  }
+
+  .stores-info {
+    margin: 10px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 800px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  th {
+    background-color: gray;
+    color: white;
+  }
+</style>

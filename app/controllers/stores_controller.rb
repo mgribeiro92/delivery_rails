@@ -10,7 +10,7 @@ class StoresController < ApplicationController
     if current_user.admin?
       @stores = Store.all.includes(:user)
     elsif current_user.buyer?
-      @stores = Store.includes(:image_attachment).all
+      @stores = Store.where(soft_delete: false).includes(:image_attachment).all
     else
       @stores = Store.where(user: current_user).includes(:image_attachment).all
     end
@@ -68,10 +68,10 @@ class StoresController < ApplicationController
 
   # DELETE /stores/1 or /stores/1.json
   def destroy
-    if current_user.admin?
-      if @store.update(soft_delete: !@store.soft_delete)
-        redirect_to store_url(@store), notice: "Loja #{@store.name} foi mudado seu status para #{@store.status}!"
-      end
+    if @store.update(soft_delete: !@store.soft_delete)
+      redirect_to store_url(@store), notice: "Loja #{@store.name} foi mudado seu status para #{@store.status}!"
+    else
+      redirect_to store_url(@store), alert: "Falha ao alterar o status da loja."
     end
   end
 

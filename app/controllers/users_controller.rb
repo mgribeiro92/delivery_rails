@@ -28,15 +28,17 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
-    @user.password = SecureRandom.hex(8)
+    if current_user.admin?
+      @user = User.new(user_params)
+      @user.password = SecureRandom.hex(8)
 
-    if @user.save
-      # Enviar e-mail de redefinição de senha
-      UserMailer.reset_password(@user).deliver_now
-      redirect_to @user, notice: 'Usuário criado com sucesso. Um e-mail para definir a senha foi enviado.'
-    else
-      render :new, status: :unprocessable_entity
+      if @user.save
+        # Enviar e-mail de redefinição de senha
+        UserMailer.reset_password(@user).deliver_now
+        redirect_to @user, notice: 'Usuário criado com sucesso. Um e-mail para definir a senha foi enviado.'
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
