@@ -8,13 +8,8 @@ RSpec.describe OrderItem, type: :model do
 
   describe "belongs to" do
 
-    let(:stores) { create(:store) }
     let(:product2) { create(:product2) }
-
-    # let(:store2) { create(:store, user: seller ) }
-    # let(:product2) { create(:product2, store: store2) }
-
-    let(:order) { create(:order) }
+    let(:order) { create(:order2) }
 
     it "product should belongs to store" do
       order_item = OrderItem.create(order: order, product: product2, amount: 2, price: product2)

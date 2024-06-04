@@ -12,7 +12,7 @@
       <% @order.order_items.each do |order_item| %>
         <div class="order-item-info">
           <div><%= order_item.amount %>x <%= order_item.product.title %> - R$ <%= order_item.price %></div>
-          <div><%= link_to "Editar Produto", edit_order_item_path(order_item)  %></div>
+          <div><%= link_to "Editar Produto", edit_order_item_path(order_item, order_id: @order.id)  %></div>
           <div><%= button_to "Remover Produto", order_item, method: :delete, data: { confirm: "Tem certeza que deseja remover este produto do pedido?" } %></div>
         </div>
       <% end %>

@@ -48,9 +48,8 @@ class OrdersController < ApplicationController
 
   def update
     if @order.update(order_params)
-      redirect_to listing_orders_path, notice: "Pedido atualizado com sucesso!"
+      redirect_to order_url(@order), notice: "Pedido atualizado com sucesso!"
     else
-      puts('ta passando no erro do update aqui')
       render :edit, status: :unprocessable_entity
     end
   end
@@ -92,7 +91,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:store_id, :buyer_id, :total, :state)
+    params.require(:order).permit(:store_id, :buyer_id)
   end
 
   def invalid_transition(e)

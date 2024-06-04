@@ -7,6 +7,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   validates :role, presence: true
+  validates :password, presence: true, on: :create
 
   def self.token_for(user)
     jwt_key = Rails.application.credentials.jwt_key

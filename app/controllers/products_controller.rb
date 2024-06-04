@@ -3,13 +3,13 @@ class ProductsController < ApplicationController
   before_action :authenticate!
   before_action :set_product, only: %i[ show update destroy edit ]
   before_action :set_product_create, only: [ :new, :create ]
+  before_action :set_product_update, only: [ :edit, :update]
   rescue_from User::InvalidToken, with: :not_authorized
 
   def index
     respond_to do |format|
       format.json do
         if buyer?
-          puts("ta passando no buyer")
           page = params.fetch(:page, 1)
           @products = Product.where(
             store_id: params[:store_id]).
@@ -22,8 +22,9 @@ class ProductsController < ApplicationController
   end
 
   def products_store
+    page = params.fetch(:page, 1)
     @store = Store.find(params[:store_id])
-    @products = @store.products
+    @products = @store.products.page(page)
   end
 
   def listing
@@ -41,14 +42,10 @@ class ProductsController < ApplicationController
   end
 
   def edit
-    if current_user.admin?
-      @stores = Store.all
-    end
   end
 
   def create
     @product = Product.new(product_params)
-
     respond_to do |format|
       if @product.save
         format.html { redirect_to listing_path, notice: "Produto criado com sucesso"}
@@ -99,5 +96,9 @@ class ProductsController < ApplicationController
       if current_user.admin?
         @stores = Store.all
       end
+    end
+
+    def set_product_update
+      @stores = Store.all
     end
 end

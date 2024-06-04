@@ -15,6 +15,20 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
+  def create
+    if current_user.admin?
+      @user = User.new(user_params)
+      @user.password = SecureRandom.hex(8)
+
+      if @user.save!
+        UserMailer.reset_password(@user).deliver_now
+        redirect_to @user, notice: 'Usuário criado com sucesso. Um e-mail para definir a senha foi enviado.'
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end
+  end
+
   def update
     respond_to do |format|
       if @user.update(user_params)
@@ -23,21 +37,6 @@ class UsersController < ApplicationController
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def create
-    if current_user.admin?
-      @user = User.new(user_params)
-      @user.password = SecureRandom.hex(8)
-
-      if @user.save
-        # Enviar e-mail de redefinição de senha
-        UserMailer.reset_password(@user).deliver_now
-        redirect_to @user, notice: 'Usuário criado com sucesso. Um e-mail para definir a senha foi enviado.'
-      else
-        render :new, status: :unprocessable_entity
       end
     end
   end

@@ -6,6 +6,6 @@ FactoryBot.define do
 
   factory :store2, class: Store do
     name { "Great Store"}
-    association :user, factory: :user_seller
+    association :user, factory: :seller3
   end
 end

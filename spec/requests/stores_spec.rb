@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "/stores", type: :request do
+RSpec.describe "Stores", type: :request do
 
   let(:user) { create(:user_seller) }
 
@@ -125,7 +125,6 @@ RSpec.describe "/stores", type: :request do
       store.reload
       expect(store.soft_delete).to eq(true)
     end
-
   end
 
   context "admin" do
@@ -153,7 +152,6 @@ RSpec.describe "/stores", type: :request do
           name: "What a great store",
           user_id: user.id
         }
-
         expect {
           post stores_url, params: { store: store_attributes }
         }.to change(Store, :count).by(1)

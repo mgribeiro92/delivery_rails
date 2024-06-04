@@ -4,9 +4,6 @@ FactoryBot.define do
     password { "123456" }
     password_confirmation { "123456" }
     role { 'admin' }
-
-    # trait :buyer do
-    #   role { 'buyer' }
   end
 
   factory :user_seller, class: User do
@@ -23,11 +20,31 @@ FactoryBot.define do
     role { "buyer" }
   end
 
-
-  factory :user1, class: User do
-    email { "user@example.com" }
+  factory :buyer1, class: User do
+    email { "buyer_01@example.com" }
     password { "123456" }
     password_confirmation { "123456" }
-    role { "admin" }
+    role { "buyer" }
+  end
+
+  factory :seller1, class: User do
+    email { "seller_01@example.com" }
+    password { "123456" }
+    password_confirmation { "123456" }
+    role { "seller" }
+  end
+
+  factory :seller2, class: User do
+    email { "seller_02@example.com" }
+    password { "123456" }
+    password_confirmation { "123456" }
+    role { "seller" }
+  end
+
+  factory :seller3, class: User do
+    email { "seller_03@example.com" }
+    password { "123456" }
+    password_confirmation { "123456" }
+    role { "seller" }
   end
 end

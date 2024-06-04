@@ -7,6 +7,6 @@ FactoryBot.define do
 
   factory :order2, class: Order do
     association :store, factory: :store2
-    association :buyer, factory: :user_buyer
+    association :buyer, factory: :buyer1
   end
 end
