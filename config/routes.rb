@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get "orders" => "orders#listing", as: :listing_orders
   get "orders_seller/:id" => "orders#sellers"
   post "change_state" => "orders#change_state"
+  post "payments" => "orders#payment"
 
   scope :buyers do
     resources :orders, only: [ :index, :create, :show, :update ]

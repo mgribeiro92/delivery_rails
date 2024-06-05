@@ -10,7 +10,12 @@ class StoresController < ApplicationController
     if current_user.admin?
        @stores = Store.all.includes(:user)
     elsif current_user.buyer?
-      @stores = Store.includes(:image_attachment).all
+      if params[:query].present?
+        puts('passando na query')
+        @stores = Store.where("LOWER(name) LIKE ?", "%#{params[:query]}%").includes(:image_attachment)
+       else
+        @stores = Store.includes(:image_attachment).all
+      end
     else
       @stores = Store.where(user: current_user).includes(:image_attachment).all
     end

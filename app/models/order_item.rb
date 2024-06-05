@@ -4,20 +4,23 @@ class OrderItem < ApplicationRecord
 
   validates :amount, presence: true
   validate :store_product, :amount_empty
-  after_save :update_order_total
-  after_destroy :update_order_total
-  before_save :calculate_price, :price_empty
+  # after_destroy :update_order_total
+  # after_save :update_order_total
+  before_save :price_empty
 
   private
 
-  def update_order_total
-    order.calculate_total
-    order.save
-  end
+  # def update_order_total
+  #   puts("ta passando no update order total")
+  #   order.calculate_total
+  #   order.save
+  # end
 
-  def calculate_price
-    self.price = product.price * amount if product.price && amount
-  end
+  # def calculate_price
+  #   puts('passando no calculate price')
+  #   self.price = product.price * amount if product.price && amount
+  #   puts(self.price)
+  # end
 
   def amount_empty
     if self.amount == 0 || self.amount == nil

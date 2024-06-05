@@ -78,3 +78,7 @@ gem 'aws-sdk-s3'
 gem "kaminari", "~> 1.2"
 
 gem 'letter_opener', group: :development
+
+gem "faraday", "~> 2.9"
+
+gem "sidekiq", "~> 7.2"

@@ -5,6 +5,7 @@ class OrdersController < ApplicationController
   before_action :only_buyers!, only: [ :index ]
   before_action :set_order_update, only: [ :edit, :update ]
   before_action :set_order_create, only: %i[ new create]
+
   rescue_from StateMachines::InvalidTransition, with: :invalid_transition
 
   def index
@@ -17,6 +18,30 @@ class OrdersController < ApplicationController
     end
   end
 
+  def sellers
+    @store = Store.find(params[:id])
+
+    if current_user.stores.include?(@store)
+      @orders = Order.where(store: @store).order(id: :desc)
+    else
+      render json: {message: "Store not include to user"}
+    end
+  end
+
+  def payment
+    # @order = Order.find(payment_params[:order_id])
+  #   PaymentJob.perform_later(
+  #     order: @order,
+  #     value: payment_params[:value],
+  #     number: payment_params[:number],
+  #     valid: payment_params[:valid],
+  #     cvv: payment_params[:cvv]
+  #   )
+  # end
+    @order = Order.last
+    PaymentJob.perform_later(order: @order, value: 12.23, number: "5555 5555 5555 4444", valid: "2027-03-13", cvv: 123)
+
+  end
   def show
   end
 
@@ -38,7 +63,7 @@ class OrdersController < ApplicationController
     respond_to do |format|
       if @order.save
         format.html { redirect_to new_order_item_path(order_id: @order.id), notice: "Pedido criado com sucesso, pode colocar os produtos!"}
-        format.json { render json: @order }
+        format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @order.errors }
@@ -54,15 +79,6 @@ class OrdersController < ApplicationController
     end
   end
 
-  def sellers
-    @store = Store.find(params[:id])
-
-    if current_user.stores.include?(@store)
-      @orders = Order.where(store: @store).order(id: :desc)
-    else
-      render json: {message: "Store not include to user"}
-    end
-  end
 
   def change_state
     @order = Order.find(params[:order][:id])
@@ -91,7 +107,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:store_id, :buyer_id)
+    params.require(:order).permit(:store_id, order_items_attributes: [:product_id, :amount])
   end
 
   def invalid_transition(e)
@@ -111,6 +127,10 @@ class OrdersController < ApplicationController
       @stores = Store.all
       @buyers = User.where(role: :buyer)
     end
+  end
+
+  def payment_params
+    params.require(:payment).permit(:order_id, :value, :number, :valid, :cvv)
   end
 
 end
