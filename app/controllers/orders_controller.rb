@@ -20,28 +20,24 @@ class OrdersController < ApplicationController
 
   def sellers
     @store = Store.find(params[:id])
-
     if current_user.stores.include?(@store)
-      @orders = Order.where(store: @store).order(id: :desc)
+      @orders = Order.where(store: @store).order(id: :desc).includes(:store, :order_items, :buyer)
     else
       render json: {message: "Store not include to user"}
     end
   end
 
   def payment
-    # @order = Order.find(payment_params[:order_id])
-  #   PaymentJob.perform_later(
-  #     order: @order,
-  #     value: payment_params[:value],
-  #     number: payment_params[:number],
-  #     valid: payment_params[:valid],
-  #     cvv: payment_params[:cvv]
-  #   )
-  # end
-    @order = Order.last
-    PaymentJob.perform_later(order: @order, value: 12.23, number: "5555 5555 5555 4444", valid: "2027-03-13", cvv: 123)
-
+    @order = Order.find(payment_params[:order_id])
+    PaymentJob.perform_later(
+      order: @order,
+      value: payment_params[:value],
+      number: payment_params[:number],
+      valid: payment_params[:valid],
+      cvv: payment_params[:cvv]
+    )
   end
+
   def show
   end
 

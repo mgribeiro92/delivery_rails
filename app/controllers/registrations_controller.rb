@@ -4,7 +4,7 @@ class RegistrationsController < ApplicationController
   rescue_from User::InvalidToken, with: :not_authorized
 
   def me
-    render json: {email: current_user.email, id: current_user.id}
+    render json: {email: current_user.email, id: current_user.id, address: current_user.address}
   end
 
   def sign_in

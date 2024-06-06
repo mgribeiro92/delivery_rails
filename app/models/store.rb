@@ -7,6 +7,9 @@ class Store < ApplicationRecord
   has_one :address, as: :addressable
   has_one_attached :image
 
+  geocoded_by :address
+  after_validation :geocode, if: ->(obj){ obj.address.present? and obj.address_changed? }
+
   private
 
   def ensure_seller

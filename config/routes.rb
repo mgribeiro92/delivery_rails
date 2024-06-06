@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
   resources :stores do
     resources :products, only: [:index]
+    get "/orders/new" => "stores#new_order"
   end
 
   root to: "welcome#index"

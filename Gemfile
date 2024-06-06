@@ -84,3 +84,5 @@ gem "faraday", "~> 2.9"
 gem "sidekiq", "~> 7.2"
 
 gem 'geocoder'
+
+gem "eventmachine", "~> 1.2"

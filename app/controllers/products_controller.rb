@@ -11,7 +11,6 @@ class ProductsController < ApplicationController
       format.json do
         if buyer?
           if params[:query].present?
-            puts('ta passando na query')
             page = params.fetch(:page, 1)
             @products = Product.where(store_id: params[:store_id])
             @products = @products.where("LOWER(title) LIKE ?", "%#{params[:query]}%").
@@ -19,7 +18,6 @@ class ProductsController < ApplicationController
               includes(:image_product_attachment
             )
           else
-            puts('passando fora da query')
             page = params.fetch(:page, 1)
             @products = Product.where(store_id: params[:store_id]).
               order(:title).page(page).

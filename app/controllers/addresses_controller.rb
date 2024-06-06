@@ -1,5 +1,6 @@
 class AddressesController < ApplicationController
-  skip_forgery_protection only: [ :create ]
+  skip_forgery_protection only: [ :create, :update ]
+  before_action :set_address, only: [ :update ]
 
   def create
     if address_params[:store_id].present?
@@ -18,6 +19,14 @@ class AddressesController < ApplicationController
       render json: @address
     else
       render json: @address.errors
+    end
+  end
+
+  def update
+    if @address.update(address_params)
+      render json: @address
+    else
+      render json: { message: "No update!"}
     end
   end
 
