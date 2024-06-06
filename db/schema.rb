@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_200551) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_05_170003) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -37,6 +37,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_200551) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "addresses", force: :cascade do |t|
+    t.string "addressable_type", null: false
+    t.integer "addressable_id", null: false
+    t.string "street"
+    t.string "number"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
+    t.string "country"
+    t.float "latitude"
+    t.float "longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
   end
 
   create_table "credentials", force: :cascade do |t|
@@ -93,6 +109,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_200551) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.boolean "soft_delete", default: false, null: false
+    t.string "category"
+    t.text "description"
     t.index ["user_id"], name: "index_stores_on_user_id"
   end
 

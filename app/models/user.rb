@@ -4,6 +4,7 @@ class User < ApplicationRecord
   enum :role, [:admin, :seller, :buyer]
   has_many :stores
   has_one :refresh_token
+  has_one :address, as: :addressable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   validates :role, presence: true

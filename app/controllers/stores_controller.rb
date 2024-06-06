@@ -21,6 +21,10 @@ class StoresController < ApplicationController
     end
   end
 
+  def new_orders
+    
+  end
+
   # GET /stores/1 or /stores/1.json
   def show
   end
@@ -57,8 +61,8 @@ class StoresController < ApplicationController
 
   # PATCH/PUT /stores/1 or /stores/1.json
   def update
-    if store_params[:image].present? # Verifica se uma nova imagem está sendo enviada
-      @store.image.attach(store_params[:image]) # Anexa a nova imagem ao modelo
+    if store_params[:image].present?
+      @store.image.attach(store_params[:image])
     end
     respond_to do |format|
       if @store.update(store_params)
@@ -86,30 +90,30 @@ class StoresController < ApplicationController
 
   private
 
-    def not_authorized(e)
-      render json: {message: "Invalid token!"}, status: 401
-    end
+  def not_authorized(e)
+    render json: {message: "Invalid token!"}, status: 401
+  end
 
-    def set_store
-      params[:id]
-      @store = Store.find(params[:id])
-    end
+  def set_store
+    @store = Store.find(params[:id])
+  end
 
-    def store_params
-      required = params.require(:store)
+  def store_params
+    required = params.require(:store)
 
-      if current_user.admin?
-        required.permit(:name, :user_id, :image)
-      else
-        required.permit(:name, :image)
-      end
+    if current_user.admin?
+      required.permit(:name, :user_id, :image)
+    else
+      required.permit(:name, :image, :description, :category)
     end
+  end
 
-    def set_store_update
-      if current_user.admin?
-        @sellers = User.where(role: :seller)
-      else
-        @sellers = []
-      end
+  def set_store_update
+    if current_user.admin?
+      @sellers = User.where(role: :seller)
+    else
+      @sellers = []
     end
+  end
+
 end

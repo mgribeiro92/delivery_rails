@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   resources :products
   resources :order_items
   resources :users
+  resources :addresses, only: [ :create, :update ]
 
   get "listing" => "products#listing"
   get "products/store/:store_id" => "products#products_store"

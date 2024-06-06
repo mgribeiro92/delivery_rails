@@ -59,4 +59,24 @@ class UsersController < ApplicationController
     params.required(:user).permit(:email, :role)
   end
 
+  def address_params
+    params.require(:address).permit(:street, :number, :city, :state, :zip_code, :country)
+  end
+
+  def update_address(user)
+    if user.address
+      user.address.update(address_params)
+    else
+      create_address(user)
+    end
+  end
+
+  def create_address(user)
+    address = user.build_address(address_params)
+    if address.save
+      user.update(address: address)
+    else
+      flash[:alert] = 'Erro ao salvar endereço.'
+    end
+  end
 end

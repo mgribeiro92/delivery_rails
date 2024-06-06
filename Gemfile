@@ -82,3 +82,5 @@ gem 'letter_opener', group: :development
 gem "faraday", "~> 2.9"
 
 gem "sidekiq", "~> 7.2"
+
+gem 'geocoder'
