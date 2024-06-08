@@ -9,26 +9,31 @@ class StoresController < ApplicationController
   # GET /stores or /stores.json
   def index
     user = current_user
-    user_coordinates = [user.address.latitude, user.address.longitude]
+    user_coordinates = [user.address.latitude, user.address.longitude] if user.address
     if current_user.admin?
        @stores = Store.all.includes(:user)
     elsif current_user.buyer?
       if params[:query].present?
         @stores = Store.where("LOWER(name) LIKE ?", "%#{params[:query]}%").includes(:image_attachment)
         render locals: { user_coordinates: user_coordinates }
+      elsif params[:filter].present?
+        @stores = Store.where(category: params[:filter])
+        render locals: { user_coordinates: user_coordinates }
       elsif params[:near].present?
+
         @stores = Store.includes(:address).map do |store|
           if store.address.present?
             distance = store.address.distance_to(user_coordinates)
           { store: store, distance: distance }
           end
         end.compact
-
+        puts(@stores)
         @stores = @stores.sort_by! { |s| s[:distance] }.map { |s| s[:store] }
         render locals: { user_coordinates: user_coordinates }
+
       else
+        puts("passando em todas")
         @stores = Store.includes(:image_attachment, :address).all
-        puts(@stores)
         render locals: { user_coordinates: user_coordinates }
       end
     else
@@ -134,7 +139,7 @@ class StoresController < ApplicationController
     required = params.require(:store)
 
     if current_user.admin?
-      required.permit(:name, :user_id, :image)
+      required.permit(:name, :user_id, :image, :description, :category)
     else
       required.permit(:name, :image, :description, :category)
     end

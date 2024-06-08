@@ -17,6 +17,16 @@
   </div>
 
   <div class="form-group">
+    <%= form.label :category, style: "display: block" %>
+    <%= form.select :category, [["Restaurante"], ["Doceria"], ["Bebidas"]], {}, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
     <% if current_user.admin? %>
       <%= form.label :seller, style: "display: block" %>
       <%= form.collection_select :user_id, @sellers, :id, :email, { prompt: "Sellers..." }, { class: "form-control" } %>

@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  skip_forgery_protection only: [ :update, :delete ]
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
 
   def index
@@ -46,6 +47,9 @@ class UsersController < ApplicationController
       if @user.update(soft_delete: !@user.soft_delete)
         redirect_to user_url(@user), notice: "Usuario #{@user.email} foi mudado seu status para #{@user.status}!"
       end
+    elsif current_user.buyer?
+      @user.update(soft_delete: true)
+      render json: { message: "Usuario desativado!"}
     end
   end
 
@@ -56,27 +60,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.required(:user).permit(:email, :role)
-  end
+    params.required(:user).permit(:email, :role)  end
 
-  def address_params
-    params.require(:address).permit(:street, :number, :city, :state, :zip_code, :country)
-  end
 
-  def update_address(user)
-    if user.address
-      user.address.update(address_params)
-    else
-      create_address(user)
-    end
-  end
-
-  def create_address(user)
-    address = user.build_address(address_params)
-    if address.save
-      user.update(address: address)
-    else
-      flash[:alert] = 'Erro ao salvar endereço.'
-    end
-  end
 end

@@ -4,13 +4,16 @@ class PaymentJob < ApplicationJob
   def perform(order:, value:, number:, valid:, cvv:)
     params = { payment: {value: value, number: number, valid: valid, cvv: cvv} }
     response = con.post("/payments", params.to_json)
-    # order.paid if response.success?
+    @order = Order.find(order)
+    @order.payment_success! if response.success?
+
   end
 
   private
 
   def config
-    Rails.configuration.payment
+    host = ENV['PAYMENT_URL'] || Rails.configuration.payment.host
+    Rails.configuration.payment.merge(host: host)
   end
 
   def con

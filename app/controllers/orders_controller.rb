@@ -28,14 +28,16 @@ class OrdersController < ApplicationController
   end
 
   def payment
-    @order = Order.find(payment_params[:order_id])
+    puts(payment_params, "AQUi tem que estar os paramentos")
     PaymentJob.perform_later(
-      order: @order,
+      order: payment_params[:order_id],
       value: payment_params[:value],
       number: payment_params[:number],
       valid: payment_params[:valid],
       cvv: payment_params[:cvv]
     )
+
+    render json: { message: 'Payment processing' }, status: :accepted
   end
 
   def show

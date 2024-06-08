@@ -10,6 +10,8 @@ build-essential git libvips pkg-config curl libsqlite3-0
 WORKDIR /delivery
 # Copia todos os arquivos (atuais) da aplicação rails para a Imagem
 COPY . /delivery
+
+EXPOSE 3000
 # Instala as dependências (atuais) da aplicação
 RUN bundle install
 

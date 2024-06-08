@@ -1,6 +1,6 @@
 <p style="color: green"><%= notice %></p>
 
-<div class="store-info">
+<div class="store">
   <div class="store-name"><%= @store.name %></div>
   <%= link_to "Editar Loja", edit_store_path(@store) %> |
   <%= link_to "Novo Produto", new_product_path %> | 
@@ -11,7 +11,10 @@
     <%= button_to "Desativar", @store, method: :delete, class:"store-destroy" %>
   <% end %>
 </div>
-
+<div class="store-info">
+  <div><span class="store-atributes">Categoria:</span><%= @store.category %></div>
+  <div><span class="store-atributes">Descrição:</span><%= @store.description %></div>
+</div>
 <table>
   <thead>
     <tr>
@@ -34,7 +37,7 @@
 
 <style>
 
-  .store-info {
+  .store {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -48,6 +51,18 @@
     margin-right: 100px;
     gap: 50px;
   }
+
+  .store-info {
+    margin-left: 10px;
+  }
+
+  .store-atributes {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
 
   .store-destroy {
     margin-left: 30px;

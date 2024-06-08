@@ -19,6 +19,7 @@ class OrderItemsController < ApplicationController
 
   def create
     @order_item = OrderItem.new(order_item_params.merge(order: @order))
+    @order_item.price = @order_item.amount * @order_item.product.price
     respond_to do |format|
       if @order_item.save
         format.html { redirect_to edit_order_path(@order_item.order), notice: "Produto adicionado com sucesso!"}

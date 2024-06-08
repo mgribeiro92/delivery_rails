@@ -1,7 +1,7 @@
 class Order < ApplicationRecord
   belongs_to :buyer, class_name: "User", required: true
   belongs_to :store, required: true
-  has_many :order_items
+  has_many :order_items, dependent: :destroy
   has_many :products, through: :order_items
   accepts_nested_attributes_for :order_items
 
@@ -9,8 +9,16 @@ class Order < ApplicationRecord
   validate :buyer_role, :store_product
 
   state_machine initial: :created do
+    event :payment_failure do
+      transition created: :payment_failure
+    end
+
+    event :payment_success do
+      transition created: :payment_success
+    end
+
     event :accept do
-      transition created: :accepted
+      transition payment_success: :accepted
     end
 
     event :delivery do
@@ -36,16 +44,9 @@ class Order < ApplicationRecord
     self.total = total
   end
 
-  # def calculate_total
-  #   puts("ta passando no calculate_total")
-  #   self.total = order_items.sum(&:price)
-  # end
-
-  # def calculate_price
-  #   puts('passando no calculate price')
-  #   order_item.price = product.price * amount if product.price && amount
-  #   puts(self.price)
-  # end
+  def paid
+    puts("PAGAMENTO PAGO")
+  end
 
   private
 
