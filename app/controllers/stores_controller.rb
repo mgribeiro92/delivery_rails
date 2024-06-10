@@ -1,5 +1,5 @@
 class StoresController < ApplicationController
-  include ActionController::Live
+  # include ActionController::Live
   skip_forgery_protection only: [ :create, :update, :destroy ]
   before_action :authenticate!
   before_action :set_store, only: %i[ show edit update destroy ]
@@ -8,11 +8,12 @@ class StoresController < ApplicationController
 
   # GET /stores or /stores.json
   def index
-    user = current_user
-    user_coordinates = [user.address.latitude, user.address.longitude] if user.address
     if current_user.admin?
        @stores = Store.all.includes(:user)
     elsif current_user.buyer?
+      puts("TA PASSANDO NO BUYER")
+      user = current_user
+      user_coordinates = [user.address.latitude, user.address.longitude] if user.address
       if params[:query].present?
         @stores = Store.where("LOWER(name) LIKE ?", "%#{params[:query]}%").includes(:image_attachment)
         render locals: { user_coordinates: user_coordinates }
@@ -20,23 +21,21 @@ class StoresController < ApplicationController
         @stores = Store.where(category: params[:filter])
         render locals: { user_coordinates: user_coordinates }
       elsif params[:near].present?
-
         @stores = Store.includes(:address).map do |store|
           if store.address.present?
             distance = store.address.distance_to(user_coordinates)
           { store: store, distance: distance }
           end
         end.compact
-        puts(@stores)
         @stores = @stores.sort_by! { |s| s[:distance] }.map { |s| s[:store] }
         render locals: { user_coordinates: user_coordinates }
 
       else
-        puts("passando em todas")
         @stores = Store.includes(:image_attachment, :address).all
         render locals: { user_coordinates: user_coordinates }
       end
     else
+      puts("aqui esta passando as stores do seller")
       @stores = Store.where(user: current_user).includes(:image_attachment).all
     end
   end
@@ -48,14 +47,15 @@ class StoresController < ApplicationController
 
     EventMachine.run do
       EventMachine::PeriodicTimer.new(3) do
-        order = Order.where(store_id: params[:store_id], status: :created)
+        puts("EVENT MACHINE")
+        order = Order.where(store_id: params[:store_id], state: :payment_success)
         if order
           sse.write({order: order}, event: "new-order")
         end
       end
     end
 
-  rescue IOError, ApplicationController::Live::ClientDisconnected
+  rescue IOError, ActionController::Live::ClientDisconnected
     sse.close
   ensure
     sse.close

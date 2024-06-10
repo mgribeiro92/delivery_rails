@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   post "change_state" => "orders#change_state"
   post "payments" => "orders#payment"
 
+
   scope :buyers do
     resources :orders, only: [ :index, :create, :show, :update ]
   end
@@ -29,6 +30,11 @@ Rails.application.routes.draw do
     resources :products, only: [:index]
     get "/orders/new" => "stores#new_order"
   end
+
+  resources :orders do
+    get "status_order" => "orders#status_order"
+  end
+
 
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check

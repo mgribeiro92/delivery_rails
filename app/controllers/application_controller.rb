@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ActionController::Live
   def authenticate!
     if request.format == Mime[:json]
       check_token!

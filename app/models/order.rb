@@ -44,10 +44,6 @@ class Order < ApplicationRecord
     self.total = total
   end
 
-  def paid
-    puts("PAGAMENTO PAGO")
-  end
-
   private
 
   def buyer_role
@@ -67,7 +63,6 @@ class Order < ApplicationRecord
   # end
 
   def store_product
-    puts('passando no store_product')
     products.each do |product|
       if product.store.id != self.store.id
         errors.add(

@@ -22,7 +22,7 @@
 
     <div class="form-group">
     <%= form.label :state, style: "display: block" %>
-    <%= form.select :state, [["created"],["accepted"], ["delivery"], ["finished"], ["rejected"]], {}, { class: "form-control" } %>
+    <%= form.select :state, [["created"], ["payment_success"], ["accepted"], ["delivery"], ["finished"], ["rejected"]], {}, { class: "form-control" } %>
   </div>
 
   <% if order.total %>

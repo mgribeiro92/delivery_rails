@@ -21,14 +21,13 @@ class OrdersController < ApplicationController
   def sellers
     @store = Store.find(params[:id])
     if current_user.stores.include?(@store)
-      @orders = Order.where(store: @store).order(id: :desc).includes(:store, :order_items, :buyer)
+      @orders = Order.where(store: @store).order(id: :desc).includes(:store, :buyer, order_items: :product)
     else
       render json: {message: "Store not include to user"}
     end
   end
 
   def payment
-    puts(payment_params, "AQUi tem que estar os paramentos")
     PaymentJob.perform_later(
       order: payment_params[:order_id],
       value: payment_params[:value],
@@ -77,7 +76,6 @@ class OrdersController < ApplicationController
     end
   end
 
-
   def change_state
     @order = Order.find(params[:order][:id])
     state = params[:order][:state]
@@ -98,6 +96,34 @@ class OrdersController < ApplicationController
     end
   end
 
+  def status_order
+    response.headers['Content-Type'] = 'text/event-stream'
+    sse = SSE.new(response.stream, retry: 300, event: "status-order")
+    sse.write({hello: "world"}, event: "status-order")
+
+    EventMachine.run do
+      state_order = nil
+      EventMachine::PeriodicTimer.new(3) do
+        puts("EVENT MACHINE LOOOPANDO")
+        puts(state_order)
+        order = Order.find(params[:order_id])
+        puts(order.state)
+        if order.state != state_order
+          # response.stream.write("event: status_update\ndata: #{@order.state}\n\n")
+          sse.write({order: order.state}, event: "status-order")
+          puts("MUDAR STATUS")
+          state_order = order.state
+        end
+      end
+    end
+
+  rescue IOError, ActionController::Live::ClientDisconnected
+    sse.close
+  ensure
+    sse.close
+  end
+
+
   private
 
   def set_order
@@ -105,7 +131,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:store_id, order_items_attributes: [:product_id, :amount])
+    params.require(:order).permit(:store_id, :buyer_id, :state, order_items_attributes: [:product_id, :amount])
   end
 
   def invalid_transition(e)

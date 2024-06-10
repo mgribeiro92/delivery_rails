@@ -1,6 +1,8 @@
 class UsersController < ApplicationController
+  include ActionController::Live
   skip_forgery_protection only: [ :update, :delete ]
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
+
 
   def index
     @users = User.all
@@ -15,6 +17,7 @@ class UsersController < ApplicationController
   def new
     @user = User.new
   end
+
 
   def create
     if current_user.admin?
