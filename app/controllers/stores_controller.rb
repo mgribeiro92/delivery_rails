@@ -11,17 +11,19 @@ class StoresController < ApplicationController
     if current_user.admin?
        @stores = Store.all.includes(:user)
     elsif current_user.buyer?
-      puts("TA PASSANDO NO BUYER")
       user = current_user
       user_coordinates = [user.address.latitude, user.address.longitude] if user.address
       if params[:query].present?
-        @stores = Store.where("LOWER(name) LIKE ?", "%#{params[:query]}%").includes(:image_attachment)
+        puts(params[:query])
+        Rails.logger.debug "Query parameter: #{params[:query]}"
+        @stores = Store.where("LOWER(name) LIKE ? AND soft_delete = ?", "%#{params[:query].downcase}%", false).includes(:image_attachment)
+        Rails.logger.debug "Stores SQL: #{@stores.to_sql}"
         render locals: { user_coordinates: user_coordinates }
       elsif params[:filter].present?
-        @stores = Store.where(category: params[:filter])
+        @stores = Store.where(category: params[:filter], soft_delete: false)
         render locals: { user_coordinates: user_coordinates }
       elsif params[:near].present?
-        @stores = Store.includes(:address).map do |store|
+        @stores = Store.where(soft_delete: false).includes(:address).map do |store|
           if store.address.present?
             distance = store.address.distance_to(user_coordinates)
           { store: store, distance: distance }
@@ -31,12 +33,13 @@ class StoresController < ApplicationController
         render locals: { user_coordinates: user_coordinates }
 
       else
-        @stores = Store.includes(:image_attachment, :address).all
+        puts("PASSANDO EM TODAS AS LOJAS")
+        @stores = Store.where(soft_delete: false).includes(:image_attachment, :address).all
         render locals: { user_coordinates: user_coordinates }
       end
     else
-      puts("aqui esta passando as stores do seller")
-      @stores = Store.where(user: current_user).includes(:image_attachment).all
+      puts("PASSANDO NAS LOJAS DO SELLER")
+      @stores = Store.where(user: current_user, soft_delete: false).includes(:image_attachment, :address).all
     end
   end
 
@@ -114,14 +117,18 @@ class StoresController < ApplicationController
 
   # DELETE /stores/1 or /stores/1.json
   def destroy
-    respond_to do |format|
-      if @store.update(soft_delete: !@store.soft_delete)
-        format.html { redirect_to store_url(@store), notice: "Loja #{@store.name} foi mudado seu status para #{@store.status}!" }
-        format.json { render json: @store.soft_delete }
-      else
-        format.html { redirect_to store_url(@store), alert: "Falha ao alterar o status da loja." }
-        format.json { render json: { message: "Nope!"}}
+    if current_user.admin?
+      respond_to do |format|
+        if @store.update(soft_delete: !@store.soft_delete)
+          format.html { redirect_to store_url(@store), notice: "Loja #{@store.name} foi mudado seu status para #{@store.status}!" }
+        else
+          format.html { redirect_to store_url(@store), alert: "Falha ao alterar o status da loja." }
+        end
       end
+    else
+      @store.update(soft_delete: true)
+      @store.products.update_all(soft_delete: true)
+      render json: { message: "Loja e seus produtos desativados!"}
     end
   end
 

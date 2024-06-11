@@ -96,38 +96,39 @@ class OrdersController < ApplicationController
     end
   end
 
-  def status_order
-    response.headers['Content-Type'] = 'text/event-stream'
-    sse = SSE.new(response.stream, retry: 300, event: "status-order")
-    sse.write({hello: "world"}, event: "status-order")
+  # def status_order
+  #   response.headers['Content-Type'] = 'text/event-stream'
+  #   sse = SSE.new(response.stream, retry: 300, event: "status-order")
 
-    EventMachine.run do
-      state_order = nil
-      EventMachine::PeriodicTimer.new(3) do
-        puts("EVENT MACHINE LOOOPANDO")
-        puts(state_order)
-        order = Order.find(params[:order_id])
-        puts(order.state)
-        if order.state != state_order
-          # response.stream.write("event: status_update\ndata: #{@order.state}\n\n")
-          sse.write({order: order.state}, event: "status-order")
-          puts("MUDAR STATUS")
-          state_order = order.state
-        end
-      end
-    end
+  #   order = Order.find(params[:order_id])
+  #   last_order = order.state
 
-  rescue IOError, ActionController::Live::ClientDisconnected
-    sse.close
-  ensure
-    sse.close
-  end
+  #   EventMachine.run do
+  #     EventMachine::PeriodicTimer.new(3) do
+  #       order.reload
+  #       puts("EVENT MACHINE")
+  #       puts(last_order)
+  #       puts(order.state)
+  #       if order.state != last_order
+  #         # response.stream.write("event: status_update\ndata: #{@order.state}\n\n")
+  #         sse.write({order: "pedido atualizado"}, event: "new-status")
+  #         puts("MUDAR STATUS")
+  #         # last_order = order.state
+  #       end
+  #     end
+  #   end
+
+  # rescue IOError, ActionController::Live::ClientDisconnected
+  #   sse.close
+  # ensure
+  #   sse.close
+  # end
 
 
   private
 
   def set_order
-    @order = Order.find(params[:id])
+    @order = Order.includes(order_items: :product).find(params[:id])
   end
 
   def order_params

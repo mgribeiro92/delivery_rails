@@ -4,4 +4,13 @@ class Product < ApplicationRecord
   has_one_attached :image_product
 
   validates :title, presence: true
+
+  def thumbnail
+    image_product.variant(resize_to_limit: [100, 100]).processed
+  end
+
+  def high_quality_image
+    image_product.variant(resize_to_limit: [800, 800]).processed
+  end
+
 end

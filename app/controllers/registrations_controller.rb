@@ -4,6 +4,7 @@ class RegistrationsController < ApplicationController
   rescue_from User::InvalidToken, with: :not_authorized
 
   def me
+    puts("ta passando no me")
     render json: {email: current_user.email, id: current_user.id, address: current_user.address}
   end
 
@@ -12,7 +13,9 @@ class RegistrationsController < ApplicationController
     user = User.where(role: access).find_by(email: sign_in_params[:email])
 
     if !user || !user.valid_password?(sign_in_params[:password])
-      render json: {message: "Email or password incorrect!"}, status: 401
+      render json: {message: "Email ou senha incorreto!"}, status: 401
+    elsif user.soft_delete == true
+      render json: {message: "Usuário não autorizado!"}, status: 401
     else
       token = User.token_for(user)
       if user.refresh_token.present?

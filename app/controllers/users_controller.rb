@@ -1,8 +1,7 @@
 class UsersController < ApplicationController
   include ActionController::Live
-  skip_forgery_protection only: [ :update, :delete ]
+  skip_forgery_protection only: [ :update, :destroy ]
   before_action :set_user, only: [ :show, :edit, :update, :destroy ]
-
 
   def index
     @users = User.all
@@ -46,13 +45,21 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    if current_user.admin?
-      if @user.update(soft_delete: !@user.soft_delete)
-        redirect_to user_url(@user), notice: "Usuario #{@user.email} foi mudado seu status para #{@user.status}!"
+    respond_to do |format|
+      if @user.delete_soft
+        puts(@user.email)
+        format.html { redirect_to user_url(@user), notice: "Usuario #{@user.email} foi mudado seu status para #{@user.status}!" }
+        format.json { render json: { message: "Usuario desativado!"} }
+      else
+        format.html { redirect_to user_url(@user), alert: 'Failed to soft delete user.'}
+        format.json { render json: @user.erros, status: :unprocessable_entity}
       end
-    elsif current_user.buyer?
-      @user.update(soft_delete: true)
-      render json: { message: "Usuario desativado!"}
+    end
+    if current_user.seller?
+      @user.stores.update_all(soft_delete: true)
+      @user.stores.each do |store|
+        store.products.update_all(soft_delete: true)
+      end
     end
   end
 

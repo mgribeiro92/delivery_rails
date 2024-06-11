@@ -41,6 +41,9 @@ class ProductsController < ApplicationController
     end
 
     @products = Product.includes(:store).order(id: :desc)
+    @products.each do |product|
+      puts(product.store, product.id)
+    end
   end
 
   def show

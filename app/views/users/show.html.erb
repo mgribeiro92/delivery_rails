@@ -4,9 +4,14 @@
   <div><span class="user-atributes">Email:</span><%= @user.email %></div>
   <div><span class="user-atributes">Role:</span><%= @user.role %></div>
   <div><span class="user-atributes">Status:</span><%= @user.status %></div>
-  <%= link_to "Editar Usuario", edit_user_path(@user) %> |
-  <%= link_to "Voltar Usuarios", users_path %>
-  <%= button_to "Delete Lógico", @user, method: :delete, class:"btn-form" %>
+  <% if @user.soft_delete == false %>
+    <%= link_to "Editar Usuario", edit_user_path(@user) %> |
+    <%= link_to "Voltar Usuarios", users_path %>  
+    <%= button_to "Desativar", @user, method: :delete, class:"btn-form" %>
+  <% else %>
+    <%= link_to "Voltar Usuarios", users_path %>
+  <% end %>
+
 </div>
 
 <style>

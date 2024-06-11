@@ -37,6 +37,11 @@ class User < ApplicationRecord
     refresh_token.token
   end
 
+  def delete_soft
+    self.soft_delete = true
+    self.email = "default_#{self.id}@example.com"
+    save
+  end
 
 
 end
