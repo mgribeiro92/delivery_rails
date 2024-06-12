@@ -6,7 +6,8 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_items
 
   before_save :calculate_order_total
-  validate :buyer_role, :store_product
+  validate :buyer_role, :store_product, :check_product_inventory
+  after_create :reduce_product_inventory
 
   state_machine initial: :created do
     event :payment_failure do
@@ -52,15 +53,23 @@ class Order < ApplicationRecord
     end
   end
 
-  # def price_final
-  #   price_order_items = order_items.sum(&:price)
-  #   if price_order_items != self.total
-  #     errors.add(
-  #       :order,
-  #       "value must be equal to the sum of order_items: #{price_order_items}"
-  #     )
-  #   end
-  # end
+  def check_product_inventory
+    order_items.each do |item|
+      product = item.product
+      if product.inventory < item.amount
+        errors.add(:product, "O produto #{product.title} não tem estoque suficiente.")
+      end
+    end
+  end
+
+
+  def reduce_product_inventory
+    order_items.each do |item|
+      product = item.product
+      product.inventory -= item.amount
+      product.save!
+    end
+  end
 
   def store_product
     products.each do |product|

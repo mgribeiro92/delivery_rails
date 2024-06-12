@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_05_170003) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_11_194036) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -91,6 +91,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_05_170003) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "soft_delete", default: false, null: false
+    t.integer "inventory"
+    t.text "description"
     t.index ["store_id"], name: "index_products_on_store_id"
   end
 

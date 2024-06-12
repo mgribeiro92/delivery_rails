@@ -4,6 +4,7 @@ class Product < ApplicationRecord
   has_one_attached :image_product
 
   validates :title, presence: true
+  validates :inventory, numericality: { greater_than_or_equal_to: 0 }
 
   def thumbnail
     image_product.variant(resize_to_limit: [100, 100]).processed
