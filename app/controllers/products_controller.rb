@@ -13,15 +13,16 @@ class ProductsController < ApplicationController
           if params[:query].present?
             page = params.fetch(:page, 1)
             @products = Product.where(store_id: params[:store_id])
-            @products = @products.where("LOWER(title) LIKE ?", "%#{params[:query]}%").
-              order(:title).page(page).
-              includes(:image_product_attachment
+              .where("LOWER(title) LIKE ?", "%#{params[:query]}%")
+              .order(:title)
+              .page(page)
+              .includes(:image_product_attachment
             )
           else
             page = params.fetch(:page, 1)
-            @products = Product.where(store_id: params[:store_id]).
-              order(:title).page(page).
-              includes(:image_product_attachment
+            @products = Product.where(store_id: params[:store_id])
+              .order(:title).page(page)
+              .includes(:image_product_attachment
             )
           end
         end
@@ -32,7 +33,11 @@ class ProductsController < ApplicationController
   def products_store
     page = params.fetch(:page, 1)
     @store = Store.find(params[:store_id])
-    @products = @store.products.page(page)
+    if params[:filter].present?
+      @products = @store.products.where(category: params[:filter]).page(page).includes(:image_product_attachment)
+    else
+      @products = @store.products.page(page).includes(:image_product_attachment)
+    end
   end
 
   def listing
@@ -99,7 +104,7 @@ class ProductsController < ApplicationController
     end
 
     def product_params
-      params.required(:product).permit(:title, :price, :store_id, :image_product, :description, :inventory)
+      params.required(:product).permit(:title, :price, :store_id, :image_product, :description, :inventory, :category)
     end
 
     def set_product_create

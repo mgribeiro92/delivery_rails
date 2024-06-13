@@ -10,7 +10,7 @@ json.result do
 
   json.products do
     json.array! @products do |product|
-      json.extract! product, :id, :title, :price, :description, :inventory
+      json.extract! product, :id, :title, :price, :description, :inventory, :category
       json.image_url url_for(product.thumbnail) if product.image_product.attached?
     end
   end

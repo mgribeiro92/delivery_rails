@@ -10,7 +10,7 @@ json.result do
 
   json.products do
     json.array! @products do |product|
-      json.extract! product, :id, :title, :price, :description, :inventory
+      json.extract! product, :id, :title, :price, :description, :inventory, :category
       if product.image_product.attached?
         json.image_url rails_blob_url(product.image_product, only_path: true)
       end

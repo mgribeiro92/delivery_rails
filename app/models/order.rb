@@ -57,7 +57,7 @@ class Order < ApplicationRecord
     order_items.each do |item|
       product = item.product
       if product.inventory < item.amount
-        errors.add(:product, "O produto #{product.title} não tem estoque suficiente.")
+        errors.add(:error, "O produto #{product.title} não tem estoque suficiente. O estoque é de #{product.inventory}.")
       end
     end
   end

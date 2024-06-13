@@ -10,14 +10,14 @@ class StoresController < ApplicationController
   def index
     if current_user.admin?
        @stores = Store.all.includes(:user)
+
     elsif current_user.buyer?
       user = current_user
       user_coordinates = [user.address.latitude, user.address.longitude] if user.address
+      puts("USER COORDINANTES")
+      puts(user_coordinates)
       if params[:query].present?
-        puts(params[:query])
-        Rails.logger.debug "Query parameter: #{params[:query]}"
-        @stores = Store.where("LOWER(name) LIKE ? AND soft_delete = ?", "%#{params[:query].downcase}%", false).includes(:image_attachment)
-        Rails.logger.debug "Stores SQL: #{@stores.to_sql}"
+        @stores = Store.where("LOWER(name) LIKE ? AND soft_delete = ?", "%#{params[:query]}%", false).includes(:image_attachment)
         render locals: { user_coordinates: user_coordinates }
       elsif params[:filter].present?
         @stores = Store.where(category: params[:filter], soft_delete: false)
@@ -31,14 +31,12 @@ class StoresController < ApplicationController
         end.compact
         @stores = @stores.sort_by! { |s| s[:distance] }.map { |s| s[:store] }
         render locals: { user_coordinates: user_coordinates }
-
       else
-        puts("PASSANDO EM TODAS AS LOJAS")
         @stores = Store.where(soft_delete: false).includes(:image_attachment, :address).all
         render locals: { user_coordinates: user_coordinates }
       end
+
     else
-      puts("PASSANDO NAS LOJAS DO SELLER")
       @stores = Store.where(user: current_user, soft_delete: false).includes(:image_attachment, :address).all
     end
   end
