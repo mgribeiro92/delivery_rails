@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   enum :role, [:admin, :seller, :buyer]
   has_many :stores
+  has_many :chat_rooms, class_name: "ChatRoom", foreign_key: "buyer_id"
   has_one :refresh_token
   has_one :address, as: :addressable
   devise :database_authenticatable, :registerable,

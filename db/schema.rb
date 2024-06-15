@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_12_134748) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_14_160253) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -55,11 +55,32 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_12_134748) do
     t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
   end
 
+  create_table "chat_rooms", force: :cascade do |t|
+    t.integer "buyer_id", null: false
+    t.integer "store_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["buyer_id"], name: "index_chat_rooms_on_buyer_id"
+    t.index ["store_id"], name: "index_chat_rooms_on_store_id"
+  end
+
   create_table "credentials", force: :cascade do |t|
     t.integer "access"
     t.string "key", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.text "content"
+    t.datetime "sent_at"
+    t.string "sender_type", null: false
+    t.integer "sender_id", null: false
+    t.integer "chat_room_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_room_id"], name: "index_messages_on_chat_room_id"
+    t.index ["sender_type", "sender_id"], name: "index_messages_on_sender"
   end
 
   create_table "order_items", force: :cascade do |t|
@@ -133,6 +154,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_12_134748) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "chat_rooms", "stores"
+  add_foreign_key "chat_rooms", "users", column: "buyer_id"
+  add_foreign_key "messages", "chat_rooms"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "stores"

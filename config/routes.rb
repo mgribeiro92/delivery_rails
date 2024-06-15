@@ -35,8 +35,14 @@ Rails.application.routes.draw do
     get "status_order" => "orders#status_order"
   end
 
+  get "last_chat" => "chat_rooms#last_chat"
+  resources :chat_rooms, only: [:index, :show, :create] do
+    resources :messages, only: [:create]
+  end
+
 
   root to: "welcome#index"
   get "up" => "rails/health#show", as: :rails_health_check
+
 
 end

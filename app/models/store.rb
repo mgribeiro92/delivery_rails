@@ -4,6 +4,7 @@ class Store < ApplicationRecord
   validates :name, presence: true, length: {minimum:3}
   has_many :products
   has_many :orders
+  has_many :chat_rooms
   has_one :address, as: :addressable
   has_one_attached :image
   # default_scope -> { where(soft_delete: false) }
