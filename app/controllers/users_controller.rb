@@ -24,7 +24,7 @@ class UsersController < ApplicationController
       @user.password = SecureRandom.hex(8)
 
       if @user.save!
-        UserMailer.reset_password(@user).deliver_now
+        # UserMailer.reset_password(@user).deliver_now
         redirect_to @user, notice: 'Usuário criado com sucesso. Um e-mail para definir a senha foi enviado.'
       else
         render :new, status: :unprocessable_entity
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.required(:user).permit(:email, :password)
+    params.required(:user).permit(:email, :password, :role)
   end
 
 

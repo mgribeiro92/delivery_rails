@@ -2,12 +2,17 @@ require 'rails_helper'
 
 RSpec.describe "products/show", type: :view do
 
-  let(:product) { create(:product2) }
+  let(:store) { create(:store) }
 
-  before do
-    assign(:product, product)
+  before(:each) do
+    @product = assign(:product, Product.create!(
+      title: "Pizza Calabresa",
+      price: 35,
+      inventory: 20,
+      store: store
+    ))
   end
-  
+
   it "renders attributes in <p>" do
     render
     expect(rendered).to match(/Pizza Calabresa/)

@@ -20,5 +20,16 @@ class ChatChannel < ApplicationCable::Channel
     )
 
     ChatChannel.broadcast_to(chat_room, message)
+
+    if message.sender_type == 'User'
+      store_id = chat_room.store_id
+      ActionCable.server.broadcast "notification_store_#{store_id}", { notification: "Você tem uma nova mensagem de #{chat_room.buyer.email}!" }
+    else
+      buyer_id = chat_room.buyer_id
+      # NotificationChannel.broadcast_to("notification_user_#{buyer_id}", {
+      #   notification: "Voce tem uma nova mensagem!"
+      # })
+      ActionCable.server.broadcast "notification_user_#{buyer_id}", { notification: "Você tem uma nova mensagem de #{chat_room.store.name}!" }
+    end
   end
 end

@@ -5,5 +5,6 @@ json.chats do
     json.buyer_email chat_room.buyer.email
     json.store_id chat_room.store_id
     json.store_name chat_room.store.name
+    json.unread_messages chat_room.messages.where(read: false).count
   end
 end

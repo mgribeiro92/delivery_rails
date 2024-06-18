@@ -14,8 +14,6 @@ class StoresController < ApplicationController
     elsif current_user.buyer?
       user = current_user
       user_coordinates = [user.address.latitude, user.address.longitude] if user.address
-      puts("USER COORDINANTES")
-      puts(user_coordinates)
       if params[:query].present?
         @stores = Store.where("LOWER(name) LIKE ? AND soft_delete = ?", "%#{params[:query]}%", false).includes(:image_attachment)
         render locals: { user_coordinates: user_coordinates }
@@ -48,7 +46,6 @@ class StoresController < ApplicationController
 
     EventMachine.run do
       EventMachine::PeriodicTimer.new(3) do
-        puts("EVENT MACHINE")
         order = Order.where(store_id: params[:store_id], state: :payment_success)
         if order
           sse.write({order: order}, event: "new-order")
@@ -64,6 +61,11 @@ class StoresController < ApplicationController
 
   # GET /stores/1 or /stores/1.json
   def show
+    # if current_user.seller? && current_user.stores.include?(@store)
+    #   render :show
+    # else
+    #   render json: { message: "Store not belong to this user!"}
+    # end
   end
 
   # GET /stores/new
@@ -118,7 +120,7 @@ class StoresController < ApplicationController
     if current_user.admin?
       respond_to do |format|
         if @store.update(soft_delete: !@store.soft_delete)
-          format.html { redirect_to store_url(@store), notice: "Loja #{@store.name} foi mudado seu status para #{@store.status}!" }
+          format.html { redirect_to stores_url, notice: "Loja #{@store.name} foi mudado seu status para #{@store.status}!" }
         else
           format.html { redirect_to store_url(@store), alert: "Falha ao alterar o status da loja." }
         end

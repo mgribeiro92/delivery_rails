@@ -5,32 +5,41 @@ class ChatRoomsController < ApplicationController
 
   def index
     if buyer?
-      @chat_rooms = ChatRoom.where(buyer: current_user)
+      @chat_rooms = ChatRoom.where(buyer: current_user).includes(:store, :buyer)
+    else
+      store_id = params[:store]
+      @chat_rooms = ChatRoom.where(store_id: store_id).includes(:store, :buyer)
     end
   end
 
   def show
+    @chat_room.messages.update_all(read: true)
   end
 
   def last_chat
     if buyer?
       @chat_room = ChatRoom.where(buyer: current_user).last
-      render :show
+    else
+      store_id = params[:store]
+      @chat_room = ChatRoom.where(store_id: store_id).last
     end
+    @chat_room.messages.update_all(read: true)
+    render :show
   end
 
   def create
+    puts('ta chegando no create')
     @chat_room = ChatRoom.find_by(chat_room_params)
 
     unless @chat_room
       @chat_room = ChatRoom.new(chat_room_params)
       if @chat_room.save
-        render json: @chat_room, status: :created
+        render :show, status: :created
       else
         render json: @chat_room.errors, status: :unprocessable_entity
       end
     else
-      render json: @chat_room, status: :ok
+      render :show, status: :ok
     end
   end
 

@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe "Products", type: :request do
-  
+
   let(:admin) { create(:user_admin) }
   let(:store) { create(:store) }
 
   let(:valid_attributes) {
-    { title: "Pizza Marguerita", price: 40, store_id: store.id }
+    { title: "Pizza Marguerita", price: 40, store_id: store.id, inventory: 20 }
   }
 
   let(:invalid_attributes) {

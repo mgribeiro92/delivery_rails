@@ -1,4 +1,4 @@
-json.extract! order, :id, :created_at, :store_id, :updated_at, :state, :total
+json.extract! order, :id, :created_at, :buyer_id, :store_id, :updated_at, :state, :total
 
 json.user_email order.buyer.email
 json.store_name order.store.name

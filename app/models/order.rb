@@ -6,7 +6,8 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_items
 
   before_save :calculate_order_total
-  validate :buyer_role, :store_product, :check_product_inventory
+  validate :buyer_role, :store_product
+  before_create :check_product_inventory
   after_create :reduce_product_inventory
 
   state_machine initial: :created do

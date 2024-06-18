@@ -2,17 +2,18 @@ require 'rails_helper'
 
 RSpec.describe "Stores", type: :request do
 
-  let(:user) { create(:user_seller) }
+  let(:admin) { create(:user_admin) }
+  let(:seller) { create (:user_seller) }
 
   let(:valid_attributes) {
-    {name: "Greatest Restaurant", user: user}
+    {name: "Greatest Restaurant", user: seller}
   }
 
   let(:invalid_attributes) {
     {name: nil}
   }
 
-  before { sign_in(user) }
+  before { sign_in(seller) }
 
   describe "GET /index" do
     it "renders a successful response" do
@@ -107,32 +108,14 @@ RSpec.describe "Stores", type: :request do
     end
   end
 
-  describe "DELETE /destroy" do
-    it "destroys the requested store" do
-      store = Store.create! valid_attributes
-      expect { delete store_url(store) }.to change(Store, :count).by(0)
-    end
 
-    it "redirects to the store" do
-      store = Store.create! valid_attributes
-      delete store_url(store)
-      expect(response).to redirect_to(store_url(store))
-    end
-
-    it "store change this status" do
-      store = Store.create! valid_attributes
-      delete store_url(store)
-      store.reload
-      expect(store.soft_delete).to eq(true)
-    end
-  end
 
   context "admin" do
     let(:admin) { create(:user_admin) }
 
     before {
-      Store.create!(name: "Store 1", user: user)
-      Store.create!(name: "Store 2", user: user)
+      Store.create!(name: "Store 1", user: seller)
+      Store.create!(name: "Store 2", user: seller)
 
       sign_in(admin)
     }
@@ -150,13 +133,34 @@ RSpec.describe "Stores", type: :request do
       it "creates a new Store" do
         store_attributes = {
           name: "What a great store",
-          user_id: user.id
+          user_id: seller.id
         }
         expect {
           post stores_url, params: { store: store_attributes }
         }.to change(Store, :count).by(1)
 
-        expect(Store.find_by(name: "What a great store").user).to eq user
+        expect(Store.find_by(name: "What a great store").user).to eq seller
+      end
+    end
+
+
+    describe "DELETE /destroy" do
+      it "destroys the requested store" do
+        store = Store.create! valid_attributes
+        expect { delete store_url(store) }.to change(Store, :count).by(0)
+      end
+
+      it "redirects to the store" do
+        store = Store.create! valid_attributes
+        delete store_url(store)
+        expect(response).to redirect_to(stores_url)
+      end
+
+      it "store change this status" do
+        store = Store.create! valid_attributes
+        delete store_url(store)
+        store.reload
+        expect(store.soft_delete).to eq(true)
       end
     end
   end

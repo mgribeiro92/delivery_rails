@@ -2,16 +2,15 @@ require 'rails_helper'
 
 RSpec.describe "order_items/edit", type: :view do
 
-  let(:buyers) { create_list(:user_buyer, 3) }
-  let(:products) { create_list(:product, 3) }
-  let(:stores) { create_list(:store, 3) }
-  let(:order_item) { create(:order_item) }
+  let(:store) { create(:store) }
+  let(:products) { create_list(:product, 3, store: store) }
+  let(:order) { create(:order, store: store)}
+  let(:order_item) { build(:order_item, order: order, product: products.first) }
 
   before do
     assign(:products, products)
     assign(:order_item, order_item)
-    assign(:buyers, buyers)
-    assign(:stores, stores)
+    assign(:order, order)
     render
   end
 

@@ -1,32 +1,27 @@
 require 'rails_helper'
 
-RSpec.describe ProductsController, type: :controller do
+RSpec.describe ProductsController, type: :request do
 
-  # let(:buyer) { create(:user_buyer) }
-  # let(:product) { create(:product, store: store) }
+  let(:buyer) { create(:user_buyer) }
+  let(:seller) { create(:user_seller) }
 
-  let(:products) do
-    products = create_list(:product, 5).each(&:save!)
-    puts(products.store.user)
-  end
+  let(:store) { create(:store) }
+  let(:products) {create_list(:product, 5, store: store)}
 
   let(:valid_attributes) {
-    { title: "X-Salada", store: products[0].store, price: 22 }
+    { title: "X-Salada", store: store, price: 22, inventory: 20 }
   }
 
   let(:credential_seller) { Credential.create_access(:seller) }
   let(:credential_buyer) { Credential.create_access(:buyer) }
 
-  let(:signed_in_seller) { api_sign_in(seller1, credential_seller )}
+  let(:signed_in_seller) { api_sign_in(seller, credential_seller )}
   let(:signed_in_buyer) { api_sign_in(buyer, credential_buyer )}
-
 
   describe 'GET #index' do
     it 'renders a successful response' do
-      puts('passando no get')
-      puts(products[0].store.user)
       get '/products',
-      params: { store_id: products[0].store.id },
+      params: { store_id: store.id },
       headers: {
         "Accept" => "application/json",
         "Authorization" => "Bearer #{signed_in_buyer["token"]}"

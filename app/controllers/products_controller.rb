@@ -62,6 +62,8 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new(product_params)
+    puts(product_params)
+    puts("Aqui tem que passar os prams")
     respond_to do |format|
       if @product.save
         format.html { redirect_to listing_path, notice: "Produto criado com sucesso"}

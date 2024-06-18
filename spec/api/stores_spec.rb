@@ -2,18 +2,18 @@ require "rails_helper"
 
 RSpec.describe "/stores", type: :request do
 
-  let(:seller1) { create(:seller1) }
-  let(:seller2) { create(:seller2) }
+  let(:seller_1) { create(:user_seller) }
+  let(:seller_2) { create(:user_seller) }
   let(:buyer) { create(:user_buyer)}
 
-  let!(:stores) do
-    seller1_stores = create_list(:store, 5, user: seller1)
-    seller2_stores = create_list(:store, 5, user: seller2)
-    (seller1_stores + seller2_stores).each(&:save!)
+  let(:stores) do
+    seller1_stores = create_list(:store, 5, user: seller_1)
+    seller2_stores = create_list(:store, 5, user: seller_2)
+    (seller1_stores + seller2_stores)
   end
 
   let(:valid_attributes) {
-    {name: "New Store", user: seller1}
+    {name: "New Store", user: seller_1}
   }
 
   let(:invalid_attributes) {
@@ -23,7 +23,7 @@ RSpec.describe "/stores", type: :request do
   let(:credential_seller) { Credential.create_access(:seller) }
   let(:credential_buyer) { Credential.create_access(:buyer) }
 
-  let(:signed_in_seller) { api_sign_in(seller1, credential_seller )}
+  let(:signed_in_seller) { api_sign_in(seller_1, credential_seller )}
   let(:signed_in_buyer) { api_sign_in(buyer, credential_buyer )}
 
 
@@ -36,7 +36,7 @@ RSpec.describe "/stores", type: :request do
       }
       json = JSON.parse(response.body)
       store_names = json["stores"].map { |store| store["name"] }
-      expect(store_names).to match_array(seller1.stores.map(&:name))
+      expect(store_names).to match_array(seller_1.stores.map(&:name))
     end
 
     it "render a successful response with current_user buyer to all stores with soft_delete = false" do
@@ -46,6 +46,7 @@ RSpec.describe "/stores", type: :request do
         "Authorization" => "Bearer #{signed_in_buyer["token"]}"
       }
       json = JSON.parse(response.body)
+      puts(json)
       store_names = json["stores"].map { |store| store["name"] }
       expect(store_names).to match_array(stores.map(&:name))
     end

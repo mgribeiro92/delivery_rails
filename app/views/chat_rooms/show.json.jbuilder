@@ -12,4 +12,5 @@ json.chat_messages @chat_room.messages do |message|
   json.sent_at message.sent_at
   json.sender_type message.sender_type
   json.sender_id message.sender_id
+  json.read message.read
 end

@@ -3,11 +3,12 @@ require 'rails_helper'
 RSpec.describe "OrderItems", type: :request do
 
   let(:admin) { create(:user_admin) }
-  let(:product) { create(:product2) }
-  let(:order) { create(:order2) }
+  let(:store) { create(:store) }
+  let(:product) { create(:product, store: store) }
+  let(:order) { create(:order, store: store) }
 
   let(:valid_attributes) {
-    { order_id: order.id, product_id: product.id, amount: 4}
+    { order_id: order.id, price: product.price, product_id: product.id, amount: 4}
   }
 
   let(:invalid_attributes) {
@@ -74,7 +75,7 @@ RSpec.describe "OrderItems", type: :request do
         patch order_item_url(order_item, order_id: order_item.order), params: { order_item: new_attributes }
         order_item.reload
         expect(order_item.amount).to eq 5
-        expect(order_item.price).to eq 0.175e3
+        expect(order_item.price).to eq order_item.product.price * 5
       end
 
       it "redirects to the order" do
