@@ -1,7 +1,11 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
-    chat_room = ChatRoom.find(params[:chat_room_id])
-    stream_for chat_room
+    chat_room = ChatRoom.find(params[:chat_room_id]) if params[:chat_room_id]
+    if chat_room
+      stream_for chat_room
+    else
+      reject
+    end
   end
 
   def unsubscribed

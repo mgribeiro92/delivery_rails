@@ -15,4 +15,3 @@ class Address < ApplicationRecord
     changed
   end
 end
-

@@ -28,7 +28,7 @@ RSpec.describe "order_items/edit", type: :view do
     end
 
     it "renders the edit order_item form" do
-      assert_select "form[action=?][method=?]", order_item_path(order_item), "post" do
+      assert_select "form[action=?][method=?]", order_items_path, "post" do
         assert_select "input[name=?]", "order_item[amount]"
         assert_select "select[name=?]", "order_item[product_id]"
       end

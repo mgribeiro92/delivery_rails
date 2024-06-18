@@ -12,6 +12,7 @@ class StoresController < ApplicationController
        @stores = Store.all.includes(:user)
 
     elsif current_user.buyer?
+      puts("ta passando aqui no buyer")
       user = current_user
       user_coordinates = [user.address.latitude, user.address.longitude] if user.address
       if params[:query].present?
@@ -30,11 +31,13 @@ class StoresController < ApplicationController
         @stores = @stores.sort_by! { |s| s[:distance] }.map { |s| s[:store] }
         render locals: { user_coordinates: user_coordinates }
       else
+        puts('ta passando em todas as lojas')
         @stores = Store.where(soft_delete: false).includes(:image_attachment, :address).all
         render locals: { user_coordinates: user_coordinates }
       end
 
     else
+      puts('ta passando no seller')
       @stores = Store.where(user: current_user, soft_delete: false).includes(:image_attachment, :address).all
     end
   end

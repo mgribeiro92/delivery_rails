@@ -78,7 +78,7 @@ RSpec.describe "registrations", type: :request do
       json = JSON.parse(response.body)
 
       expect(response).to have_http_status(401)
-      expect(json["message"]).to eq("Email or password incorrect!")
+      expect(json["message"]).to eq("Email ou senha incorreto!")
     end
 
     it "gets token and refresh_token for success sign_in" do

@@ -46,9 +46,6 @@ class ProductsController < ApplicationController
     end
 
     @products = Product.includes(:store).order(id: :desc)
-    @products.each do |product|
-      puts(product.store, product.id)
-    end
   end
 
   def show
@@ -62,12 +59,10 @@ class ProductsController < ApplicationController
 
   def create
     @product = Product.new(product_params)
-    puts(product_params)
-    puts("Aqui tem que passar os prams")
     respond_to do |format|
       if @product.save
         format.html { redirect_to listing_path, notice: "Produto criado com sucesso"}
-        format.json { render json: @product, status: :created }
+        format.json { render :show, status: :created }
       else
         format.html { render :new, status: :unprocessable_entity}
         format.json { render json: @product.errors, status: :unprocessable_entity }

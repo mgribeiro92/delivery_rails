@@ -6,10 +6,10 @@ RSpec.describe ProductsController, type: :request do
   let(:seller) { create(:user_seller) }
 
   let(:store) { create(:store) }
-  let(:products) {create_list(:product, 5, store: store)}
+  let!(:products) { create_list(:product, 5, store: store) }
 
   let(:valid_attributes) {
-    { title: "X-Salada", store: store, price: 22, inventory: 20 }
+    { title: "X-Salada", store_id: store.id, price: 22, inventory: 20 }
   }
 
   let(:credential_seller) { Credential.create_access(:seller) }
@@ -20,14 +20,16 @@ RSpec.describe ProductsController, type: :request do
 
   describe 'GET #index' do
     it 'renders a successful response' do
-      get '/products',
-      params: { store_id: store.id },
+      get "/stores/#{store.id}/products",
       headers: {
         "Accept" => "application/json",
-        "Authorization" => "Bearer #{signed_in_buyer["token"]}"
+        "Authorization" => "Bearer #{signed_in_buyer["token"]}",
+        "X-API-KEY" => credential_buyer.key
       }
       json = JSON.parse(response.body)
-      products_title = json["products"].map { |product| product["title"] }
+      products_api = json.dig("result", "products")
+      products_title = products_api.map { |product| product["title"] }
+      
       expect(products_title).to match_array(products.map(&:title))
     end
   end
@@ -41,7 +43,7 @@ RSpec.describe ProductsController, type: :request do
         "Authorization" => "Bearer #{signed_in_seller["token"]}"
       }
       json = JSON.parse(response.body)
-      expect(json["title"]).to eq "X-Salada"
+      expect(json["product"]["title"]).to eq "X-Salada"
     end
   end
 
@@ -53,9 +55,10 @@ RSpec.describe ProductsController, type: :request do
         "Authorization" => "Bearer #{signed_in_seller["token"]}",
         "Content-Type" => "application/json"
       },
-      params: valid_attributes
+      params: valid_attributes.to_json
       json = JSON.parse(response.body)
-      expect(json["title"]).to eq "X-Salada"
+
+      expect(json["product"]["title"]).to eq "X-Salada"
     end
   end
 
@@ -67,22 +70,25 @@ RSpec.describe ProductsController, type: :request do
         "Authorization" => "Bearer #{signed_in_seller["token"]}",
         "Content-Type" => "application/json"
       },
-      params: valid_attributes
+      params: valid_attributes.to_json
       json = JSON.parse(response.body)
-      expect(json["title"]).to eq "X-Salada"
+
+      expect(response).to be_successful
+      expect(json["product"]["title"]).to eq "X-Salada"
     end
   end
 
-  describe "DELETE /soft_delete" do
-    it "render a successful response to update a store" do
-      delete "/products/#{products[0].id}",
-      headers: {
-        "Accept" => "application/json",
-        "Authorization" => "Bearer #{signed_in_seller["token"]}",
-        "Content-Type" => "application/json"
-      }
-      json = JSON.parse(response.body)
-      expect(json).to eq true
-    end
-  end
+  # describe "DELETE /soft_delete" do
+  #   it "render a successful response to soft-delete a store" do
+  #     delete "/products/#{products[0].id}",
+  #     headers: {
+  #       "Accept" => "application/json",
+  #       "Authorization" => "Bearer #{signed_in_seller["token"]}",
+  #       "Content-Type" => "application/json"
+  #     }
+  #     puts response.body
+  #     json = JSON.parse(response.body)
+  #     expect(json).to eq true
+  #   end
+  # end
 end

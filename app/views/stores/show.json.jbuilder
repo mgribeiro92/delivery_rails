@@ -1,5 +1,6 @@
 json.id @store.id
 json.name @store.name
+json.user_id @store.user.id
 json.description @store.description
 json.category @store.category
 json.address @store.address
