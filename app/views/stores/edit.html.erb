@@ -1,10 +1,33 @@
-<h1>Editing store</h1>
-
-<%= render "form", store: @store %>
-
-<br>
+<div class="update-store">
+  <div class="title">Editar Loja</div>
+  <%= render "form", store: @store %>
+  <div>
+    <%= link_to "Show this store", @store %> |
+    <%= link_to "Back to stores", stores_path %>
+  </div>
 
 <div>
-  <%= link_to "Show this store", @store %> |
-  <%= link_to "Back to stores", stores_path %>
-</div>
+<style>
+
+  .update-store {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    width: 300px;
+  }
+
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+    gap: 50px;
+  }
+
+  
+  .form-control:focus {
+    border-color: gray; /* Cor de destaque personalizada */
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25); /* Sombra personalizada */
+  }
+
+</style>

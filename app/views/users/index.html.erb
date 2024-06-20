@@ -1,0 +1,70 @@
+<div class="users-info">
+  <p style="color: green"><%= notice %></p>
+
+  <div class="user-title">
+    <div class="users">Usuarios cadastrados!</div>
+    <%= link_to "Novo Usuario", new_user_path %>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Ver usuario</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+      <tr>      
+        <td><%= user.id %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role %></td>
+        <td><%= user.status %>
+        <td> <%= link_to "Ver usuario", user %> </td>
+      </tr>
+      <% end %>
+    </tbody>
+
+  </table>
+</div>
+
+<style>
+
+  .users-info {
+    margin: 10px;
+  }
+
+  .user-title {
+    display: flex;
+    align-items: center;
+  }
+
+  .users {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: auto;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  th {
+    background-color: gray;
+    color: white;
+}
+</style>

@@ -35,4 +35,26 @@ RSpec.describe Store, type: :model do
     it { should validate_length_of(:name).is_at_least(3) }
     it { should belong_to(:user) }
   end
+
+  describe "belongs_to" do
+    let(:seller) { create(:user_seller) }
+
+    let(:admin) { create(:user_admin) }
+
+    it "should not belong to admin user" do
+      store = Store.create(name: "store", user: admin)
+
+      expect(store.errors.full_messages).to eq ["User must exist"]
+    end
+
+    it "should belong to seller user" do
+      store = Store.create(name: "store", user: seller)
+
+      expect(store.user).to be_seller
+    end
+
+  end
+
+
+
 end

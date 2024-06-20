@@ -1,0 +1,33 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="product-info">
+  <div class="product-name"><%= @product.title %></div>
+  <div><span class="product-atributes">Loja:</span><%= @product.store.name %></div>
+  <div><span class="product-atributes">Price:</span><%= @product.price %></div>
+  <div><span class="product-atributes">Status:</span><%= @product.status %></div>
+  <%= link_to "Editar Produto", edit_product_path(@product) %> |
+  <%= link_to "Voltar", store_path(@product.store) %>
+  <%= button_to "Desativar", @product, method: :delete, class:"btn-form" %>
+</div>
+
+<style>
+
+  .product-info {
+    margin: 10px;
+  }
+
+  .product-name {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+    gap: 50px;
+  }
+
+  .product-atributes {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+</style>

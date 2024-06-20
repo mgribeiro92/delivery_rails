@@ -1,0 +1,32 @@
+<div class="update-product">
+  <div class="title">Editar Produto</div>
+  <%= render "form", product: @product %>
+  <div>
+    <%= link_to "Ver Produto", @product %> |
+    <%= link_to "Loja do Produto", store_path(@product.store) %>
+  </div>
+</div>
+
+<style>
+
+  .update-product {
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    width: 400px;
+  }
+
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+    gap: 50px;
+  }
+
+  .form-control:focus {
+    border-color: gray; /* Cor de destaque personalizada */
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25); /* Sombra personalizada */
+  }
+
+</style>

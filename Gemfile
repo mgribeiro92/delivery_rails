@@ -27,7 +27,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 # Use Redis adapter to run Action Cable in production
-# gem "redis", ">= 4.0.1"
+gem "redis", ">= 4.0.1"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -42,12 +42,13 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-# gem "image_processing", "~> 1.2"
+gem "image_processing"
 
 group :development, :test do
   gem "rspec-rails"
   gem "shoulda-matchers"
   gem "faker"
+  gem "factory_bot_rails"
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]
 end
@@ -69,3 +70,19 @@ gem "devise", "~> 4.9"
 gem 'rack-cors', require: 'rack/cors'
 
 gem "jwt", "~> 2.8"
+
+gem "state_machines-activerecord", "~> 0.9.0"
+
+gem 'aws-sdk-s3'
+
+gem "kaminari", "~> 1.2"
+
+gem 'letter_opener', group: :development
+
+gem "faraday", "~> 2.9"
+
+gem "sidekiq", "~> 7.2"
+
+gem 'geocoder'
+
+gem "eventmachine", "~> 1.2"

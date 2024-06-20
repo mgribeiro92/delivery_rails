@@ -1,0 +1,31 @@
+<div class="new-store">
+  <div class="title">Novo Usuario</div>
+  <%= render "form", user: @user %>
+  <div>
+    <%= link_to "Todos Usuarios", users_path %>
+  </div>
+</div>
+
+<style>
+
+  .new-store{
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    width: 300px;
+  }
+
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+    gap: 50px;
+  }
+  
+  .form-control:focus {
+    border-color: gray; /* Cor de destaque personalizada */
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25); /* Sombra personalizada */
+  }
+
+</style>

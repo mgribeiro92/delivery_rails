@@ -2,7 +2,6 @@
   <% if store.errors.any? %>
     <div style="color: red">
       <h2><%= pluralize(store.errors.count, "error") %> prohibited this store from being saved:</h2>
-
       <ul>
         <% store.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -11,12 +10,32 @@
     </div>
   <% end %>
 
-  <div>
+
+  <div class="form-group">
     <%= form.label :name, style: "display: block" %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, class: "form-control" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="form-group">
+    <%= form.label :category, style: "display: block" %>
+    <%= form.select :category, [["Restaurante"], ["Doceria"], ["Bebidas"]], {}, class: "form-control" %>
   </div>
+
+  <div class="form-group">
+    <%= form.label :description, style: "display: block" %>
+    <%= form.text_area :description, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <% if current_user.admin? %>
+      <%= form.label :seller, style: "display: block" %>
+      <%= form.collection_select :user_id, @sellers, :id, :email, { prompt: "Sellers..." }, { class: "form-control" } %>
+    <% end %>
+  </div>
+
+
+  <%= form.submit class:"btn-form" %>
+
 <% end %>
+
+

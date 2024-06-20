@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  include ActionController::Live
   def authenticate!
     if request.format == Mime[:json]
       check_token!
@@ -15,7 +16,36 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def current_credential
+    return nil if request.format != Mime[:json]
+
+    Credential.find_by(key: request.headers["X-API-KEY"]) || Credential.new
+  end
+
+  def valid_refresh_token!(refresh_token)
+    expiration_refresh_token = refresh_token.expires_at
+    timestamp = Time.now.to_i
+    if timestamp > expiration_refresh_token
+      refresh_token.delete
+      false
+    else
+      true
+    end
+  end
+
   private
+
+  def buyer?
+    (current_user && current_user.buyer? ) && current_credential.buyer?
+  end
+
+  def only_buyers!
+    is_buyer = (current_user && current_user.buyer? ) && current_credential.buyer?
+
+    if !is_buyer
+      render json: { message: "Not authorized"}, status: 401
+    end
+  end
 
   def check_token!
     if user = authenticate_with_http_token { |t, _| User.from_token(t) }

@@ -1,13 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "stores/edit", type: :view do
-  let(:user) {
-    user = User.new(
-      email: "user@example.com.br", password: "123456", password_confirmation: "123456"
-    )
-    user.save!
-    user
-  }
+  let(:user) { create(:user_seller) }
 
   let(:store) {
     Store.create!(
@@ -18,6 +12,10 @@ RSpec.describe "stores/edit", type: :view do
 
   before(:each) do
     assign(:store, store)
+  end
+
+  before do
+    sign_in user
   end
 
   it "renders the edit store form" do

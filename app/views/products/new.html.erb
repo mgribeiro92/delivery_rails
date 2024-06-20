@@ -1,0 +1,31 @@
+<div class="new-store">
+  <div class="title">Novo Produto</div>
+  <%= render "form", product: @product %>
+  <div>
+    <%= link_to "Todos os Produtos", products_path %>
+  </div>
+</div>
+
+<style>
+
+  .new-store{
+    display: flex;
+    margin: 10px;
+    flex-direction: column;
+    width: 300px;
+  }
+
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+    gap: 50px;
+  }
+  
+  .form-control:focus {
+    border-color: gray; /* Cor de destaque personalizada */
+    box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25); /* Sombra personalizada */
+  }
+
+</style>

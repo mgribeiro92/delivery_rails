@@ -1,10 +1,101 @@
 <p style="color: green"><%= notice %></p>
 
-<%= render @store %>
-
-<div>
-  <%= link_to "Edit this store", edit_store_path(@store) %> |
-  <%= link_to "Back to stores", stores_path %>
-
-  <%= button_to "Destroy this store", @store, method: :delete %>
+<div class="store">
+  <div class="store-name"><%= @store.name %></div>
+  <%= link_to "Editar Loja", edit_store_path(@store) %> |
+  <%= link_to "Novo Produto", new_product_path %> | 
+  <%= link_to "Todas as Lojas", stores_path %>
+  <% if @store.soft_delete %>
+    <%= button_to "Ativar", @store, method: :delete, class:"store-destroy" %>
+  <% else %>
+    <%= button_to "Desativar", @store, method: :delete, class:"store-destroy" %>
+  <% end %>
 </div>
+<div class="store-info">
+  <div><span class="store-atributes">Categoria:</span><%= @store.category %></div>
+  <div><span class="store-atributes">Descrição:</span><%= @store.description %></div>
+</div>
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Preço</th>
+      <th>Status</th>
+      <th>Ver Produto</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @store.products.each do |product| %>
+    <tr>      
+      <td><%= product.title %></td>
+      <td><%= product.price %>
+      <td><%= product.status %>
+      <td> <%= link_to "Ver Produto", product %></td>
+    </tr>
+    <% end %>
+  </tbody>
+
+<style>
+
+  .store {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px;
+  }
+
+  .store-name {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin-right: 100px;
+    gap: 50px;
+  }
+
+  .store-info {
+    margin-left: 10px;
+  }
+
+  .store-atributes {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+
+  .store-destroy {
+    margin-left: 30px;
+    background: transparent;
+    border-radius: 5px;
+    border: 2px solid gray;
+    color: gray;
+  }
+
+  .store-destroy:hover {
+    background: gray;
+    color: white;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 800px;
+    margin: 10px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  th {
+    background-color: gray;
+    color: white;
+  }
+
+</style>

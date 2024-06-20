@@ -1,0 +1,63 @@
+<p style="color: green"><%= notice %></p>
+<div class="title">Editar Pedido</div>
+<div class="update-order">
+  <div class="order">    
+    <div class="sub-title">Pedido # <%= @order.id %> </div>
+    <%= render "form", order: @order %>
+    <div><%= link_to "Voltar Pedidos", listing_orders_path %></div>
+  </div>
+  <div class="order-items">
+    <div class="sub-title">Itens do Pedido:</div>
+    <div class="order-item">
+      <% @order.order_items.each do |order_item| %>
+        <div class="order-item-info">
+          <div><%= order_item.amount %>x <%= order_item.product.title %> - R$ <%= order_item.price %></div>
+          <div><%= link_to "Editar Produto", edit_order_item_path(order_item, order_id: @order.id)  %></div>
+          <div><%= button_to "Remover Produto", order_item, method: :delete, data: { confirm: "Tem certeza que deseja remover este produto do pedido?" } %></div>
+        </div>
+      <% end %>
+      <div><%= link_to "Novo Produto", new_order_item_path(order_id: @order.id) %></div>
+    </div>    
+  </div>
+<div>
+
+
+<style>
+
+  .update-order {
+    display: flex;
+    margin: 10px;
+  }
+
+  .order {
+    width: 400px;
+    margin-right: 40px;
+  }
+
+  .order-items {
+    flex: 1;
+  }
+
+
+  .order-item-info {
+    display: flex;
+  }
+
+  .order-item-info > div {
+    flex: 1;
+  }
+
+  .title {
+    color: gray;
+    font-size: 30px;
+    font-weight: bold;
+    margin: 10px;
+  }
+
+  .sub-title {
+    color: gray;
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+<style>
