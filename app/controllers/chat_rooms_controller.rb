@@ -4,7 +4,7 @@ class ChatRoomsController < ApplicationController
   before_action :set_chat_room, only: %i[ show ]
 
   def index
-    if buyer?
+    if current_user.buyer?
       @chat_rooms = ChatRoom.where(buyer: current_user).includes(:store, :buyer)
     else
       store_id = params[:store]
@@ -17,7 +17,7 @@ class ChatRoomsController < ApplicationController
   end
 
   def last_chat
-    if buyer?
+    if current_user.buyer?
       @chat_room = ChatRoom.where(buyer: current_user).last
     else
       store_id = params[:store]

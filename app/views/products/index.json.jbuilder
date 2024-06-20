@@ -1,5 +1,5 @@
 json.result do
-  if params[:page].present?
+  if params[:page].present? and @products
     json.pagination do
       json.current @products.current_page
       json.per_page @products.limit_value

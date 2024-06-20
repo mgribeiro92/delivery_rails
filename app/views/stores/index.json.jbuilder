@@ -2,7 +2,7 @@ json.stores do
   json.array! @stores do |store|
     json.extract! store, :id, :name, :created_at, :updated_at, :description, :category
 
-    if store.address.present? && defined?(user_coordinates)
+    if store.address.present? && store.address.latitude? && defined?(user_coordinates)
       json.distance store.address.distance_to(user_coordinates).round(2)
     else
       json.distance nil

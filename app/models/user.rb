@@ -32,7 +32,7 @@ class User < ApplicationRecord
     refresh_token = RefreshToken.new(
       token: token,
       user: user,
-      expires_at: 1.day.from_now.to_i
+      expires_at: 10.day.from_now.to_i
     )
     refresh_token.save
     refresh_token.token

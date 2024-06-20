@@ -7,9 +7,11 @@ class ProductsController < ApplicationController
   rescue_from User::InvalidToken, with: :not_authorized
 
   def index
+    puts('ta passando no buyer')
     respond_to do |format|
       format.json do
         if buyer?
+
           if params[:query].present?
             page = params.fetch(:page, 1)
             @products = Product.where(store_id: params[:store_id])
@@ -24,6 +26,7 @@ class ProductsController < ApplicationController
               .order(:title).page(page)
               .includes(:image_product_attachment
             )
+            puts(@products)
           end
         end
       end

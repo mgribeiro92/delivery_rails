@@ -46,5 +46,33 @@ RSpec.describe "/orders", type: :request do
 
       expect(order_ids).to match_array(expected_order_ids)
     end
+
+    it "render a successful response with current_user seller to one store specific" do
+      get "/orders_seller/#{store_1.id}",
+      headers: {
+        "Accept" => "application/json",
+        "Authorization" => "Bearer #{signed_in_seller["token"]}",
+        "X-API-KEY" => credential_buyer.key
+      }
+      json = JSON.parse(response.body)
+      order_ids = json.map { |order| order["id"] }
+      expected_order_ids = orders.select { |order| order.store == store_1 }.map(&:id)
+
+      expect(order_ids).to match_array(expected_order_ids)
+    end
+
+    it "render a successful response to change state from a order" do
+      get "/change_state/#{store_1.id}",
+      headers: {
+        "Accept" => "application/json",
+        "Authorization" => "Bearer #{signed_in_seller["token"]}",
+        "X-API-KEY" => credential_buyer.key
+      }
+      json = JSON.parse(response.body)
+      order_ids = json.map { |order| order["id"] }
+      expected_order_ids = orders.select { |order| order.store == store_1 }.map(&:id)
+
+      expect(order_ids).to match_array(expected_order_ids)
+    end
   end
 end
