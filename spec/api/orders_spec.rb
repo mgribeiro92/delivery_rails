@@ -18,14 +18,6 @@ RSpec.describe "/orders", type: :request do
     buyer_1_orders_store_1 + buyer_1_orders_store_2 + buyer_2_orders_store_1 + buyer_2_orders_store_2
   end
 
-  let(:valid_attributes) {
-    {store_id: store_1.id, buyer_id: buyer.id, order_items_attributes: [product_id: product.id, amount: 4] }
-  }
-
-  let(:invalid_attributes) {
-    {buyer_id: buyer.id, order_items_attributes: [product_id: product.id, amount: 4] }
-  }
-
   let(:credential_seller) { Credential.create_access(:seller) }
   let(:credential_buyer) { Credential.create_access(:buyer) }
 

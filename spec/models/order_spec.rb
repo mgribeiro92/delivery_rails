@@ -13,7 +13,6 @@ RSpec.describe Order, type: :model do
 
     it "should belongs to buyer user" do
       order = Order.create(buyer: buyer, store: store)
-      puts(order.buyer.role)
 
       expect(order.buyer).to be_buyer
     end

@@ -17,7 +17,6 @@ class UsersController < ApplicationController
     @user = User.new
   end
 
-
   def create
     if current_user.admin?
       @user = User.new(user_params)
@@ -72,6 +71,4 @@ class UsersController < ApplicationController
   def user_params
     params.required(:user).permit(:email, :password, :role)
   end
-
-
 end

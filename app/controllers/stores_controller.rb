@@ -12,7 +12,6 @@ class StoresController < ApplicationController
        @stores = Store.all.includes(:user)
 
     elsif current_user.buyer?
-      puts("ta passando aqui no buyer")
       user = current_user
       user_coordinates = [user.address.latitude, user.address.longitude] if user.address
       if params[:query].present?

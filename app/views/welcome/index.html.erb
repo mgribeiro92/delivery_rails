@@ -1,7 +1,13 @@
 <p style= "color:red"><%= notice %></p>
 
 <div class="welcome">
-    <h1>Welcome to delivery!</h1>
+	<h1>Bem vindo ao delivery!</h1>
+
+	<% if user_signed_in? %>
+		<%= link_to 'Clique aqui para sair.', destroy_user_session_path, method: :delete %>
+	<% else %>
+		<%= link_to 'Cliqui aqui para fazer login.', new_user_session_path %>
+	<% end %>
 </div>
 
 
@@ -12,6 +18,10 @@
 		color: gray;
 		font-size: 30px;
 		font-weight: bold;
+		text-align: center;
+	}
+
+	.welcome {
 		text-align: center;
 	}
 

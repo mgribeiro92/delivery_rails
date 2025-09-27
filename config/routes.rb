@@ -19,7 +19,6 @@ Rails.application.routes.draw do
   post "change_state" => "orders#change_state"
   post "payments" => "orders#payment"
 
-
   scope :buyers do
     resources :orders, only: [ :index, :create, :show, :update ]
   end
